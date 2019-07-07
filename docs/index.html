@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script type="module">
+      import * as ti from "./__target__/ti.js";
+      window.ti = ti;
+      document.addEventListener("DOMContentLoaded", ti.ti.setready)
+    </script>
+    <style>
+      body { background-color: #000; }
+      h2 { color: #9090e0; }
+      hr { border: 4px solid #303060; }
+      img.del:hover { filter: sepia(100%) saturate(300%) brightness(50%) hue-rotate(300deg); }
+      img.add:hover { filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg); }
+      img.spare { opacity: 0.6; padding-left: 10px; }
+      img.minit { height: 32px; width: 32px; position: absolute; top: 0; left: 0; opacity: 0.9; }
+      img.minib { height: 32px; width: 32px; position: absolute; top: 32px; left: 0; opacity: 0.9; }
+      img.component { float: left; position: relative; top: 0; left: 32px; }
+      div.component { float: left; position: relative; width: 96px; padding-right: 16px; }
+      #baseitems, #items { height: 64px; }
+      br.clear { clear: both; }
+    </style>
+  </head>
+  <body>
+    <h2>Click to add item</h2>
+    <div id="baseitems" width="100%"></div>
+    <hr>
+    <h2>Click to remove item</h2>
+    <div id="items" width="100%"></div>
+    <hr>
+    <h2>Buildable items</h2>
+    <div id="buildable" width="100%"></div>
+    <br class="clear">
+    <hr>
+    <h2>Combinations</h2>
+    <div id="combinations" width="100%"></div>
+    <br class="clear">
+    <p>by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></p>
+  </body>
+</html>
