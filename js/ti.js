@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-07 13:20:39
+// Transcrypt'ed from Python, 2019-07-07 15:15:16
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var baseitem = dict ({'s': 'sword', 'b': 'bow', 'r': 'rod', 't': 'tear', 'v': 'armor', 'c': 'cloak', 'e': 'belt', 'u': 'spatula'});
@@ -215,7 +215,7 @@ export var TI =  __class__ ('TI', [object], {
 					continue;
 				}
 				uniqueitems [''.join (i)] = 1;
-				result.append (self.rendercomponentstr (i [0], i [1]));
+				result.append (self.rendercomponentstr (i [0], i [1], 'c'));
 			}
 			if (spare !== null) {
 				result.append ('<img src="img/{0}.png" class="spare" title="{1}">'.format (bimap [spare], getbaseitem (spare)));
@@ -228,11 +228,32 @@ export var TI =  __class__ ('TI', [object], {
 	get renderbuildable () {return __get__ (this, function (self, uniqueitems) {
 		var result = [];
 		for (var c of uniqueitems) {
-			result.append (self.rendercomponentstr (c [0], c [1]));
+			result.append (self.rendercomponentstr (c [0], c [1], 'b'));
 		}
 		sih ('buildable', ''.join (result));
 	});},
-	get rendercomponentstr () {return __get__ (this, function (self, c1, c2) {
+	get tipout () {return __get__ (this, function (self, typ) {
+		if (typ == 'b') {
+			var did = 'buildabletip';
+		}
+		else {
+			var did = 'combinestip';
+		}
+		sih (did, '');
+	});},
+	get tip () {return __get__ (this, function (self, typ, c) {
+		if (typ == 'b') {
+			var did = 'buildabletip';
+		}
+		else {
+			var did = 'combinestip';
+		}
+		var itemname = combines.py_get (tuple ([c [0], c [1]]), 'ohno');
+		var itemtext = py_items.py_get (itemname, 'ahhhhh');
+		var itemtitle = '{0}: {1}'.format (itemname, itemtext);
+		sih (did, itemtitle);
+	});},
+	get rendercomponentstr () {return __get__ (this, function (self, c1, c2, typ) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
 			if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
@@ -242,6 +263,7 @@ export var TI =  __class__ ('TI', [object], {
 						case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 						case 'c1': var c1 = __allkwargs0__ [__attrib0__]; break;
 						case 'c2': var c2 = __allkwargs0__ [__attrib0__]; break;
+						case 'typ': var typ = __allkwargs0__ [__attrib0__]; break;
 					}
 				}
 			}
@@ -259,7 +281,8 @@ export var TI =  __class__ ('TI', [object], {
 		var c2name = getbaseitem (c2);
 		var itemname = combines.py_get (tuple ([c1, c2]), 'ohno');
 		var itemtext = py_items.py_get (itemname, 'ahhhhh');
-		return '\n      <div class="component">\n        <img src="img/{c1}.png" title="{c1name}" class="minit">\n        <img src="img/{c2}.png" title="{c2name}" class="minib">\n        <img src="img/{c1}{c2}.png" title="{itemname}: {itemtext}" class="component">\n      </div>'.format (__kwargtrans__ ({c1: c1idx, c2: c2idx, c1name: c1name, c2name: c2name, itemname: itemname, itemtext: itemtext}));
+		var itemtitle = '{0}: {1}'.format (itemname, itemtext);
+		return '\n      <div class="component">\n        <img src="img/{c1i}.png" title="{c1name}" class="minit">\n        <img src="img/{c2i}.png" title="{c2name}" class="minib">\n        <img src="img/{c1i}{c2i}.png" title="{itemtitle}" onmouseover=\'ti.ti.tip("{typ}", "{c1}{c2}")\' onmouseout=\'ti.ti.tipout("{typ}")\' class="component">\n      </div>'.format (__kwargtrans__ ({c1i: c1idx, c2i: c2idx, c1: c1, c2: c2, c1name: c1name, c2name: c2name, itemtitle: itemtitle, typ: typ}));
 	});},
 	get mkbuttons () {return __get__ (this, function (self) {
 		var result = [];
