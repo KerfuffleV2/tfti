@@ -197,45 +197,6 @@ def getbaseitem(s, fallback = None):
   return baseitem.get(s.strip(), fallback)
 
 
-def interactive():
-  prompt = '\n{0}\n> '.format(', '.join('{0}={1}'.format(k, v) for k,v in baseitem.items()))
-  validchar = ''.join(baseitem.keys())
-  while True:
-    inpstr = input(prompt)
-    inp = list(c for c in inpstr if c in validchar)
-    inplen = len(inp)
-    if inplen == 0:
-      continue
-    elif inplen > 8:
-      print('!! No sane person has more than 8 items!')
-      continue
-    elif inplen & 1:
-      inp.append(' ')
-    result = uniquepairs(inp)
-    if len(result) == 0:
-      continue
-    print('')
-    uniqueitems = {}
-    for p in sorted(result):
-      spare = None
-      items = []
-      for i in p:
-        if i[0] == ' ':
-          spare = getbaseitem(i[1])
-          continue
-        itemname = combines[i]
-        componentstr = '+'.join(getbaseitem(''.join(i2)) or '' for i2 in i)
-        if spare:
-          sparestr = ' (+ {0})'.format(spare)
-        else:
-          sparestr = ''
-        itemstr = '{0:>17}:{1:25}'.format(componentstr, itemname)
-        uniqueitems[itemname] = itemstr
-        items.append(itemstr)
-      print('{0}{1}'.format(' | '.join(items), sparestr))
-    print('\n** Possible: {0}'.format(', '.join(x.strip() for x in uniqueitems.values())))
-
-
 def sih(k, v):
   document.getElementById(k).innerHTML = v
 
@@ -298,6 +259,7 @@ class TI(object):
       sk = ''.join(''.join(i) for i in p)
       if sk in seen:
         continue
+      result.append('<div class="combinationscontainer">')
       seen.add(sk)
       spare = None
       for i in p:
@@ -305,21 +267,39 @@ class TI(object):
           spare = i[1]
           continue
         uniqueitems[''.join(i)] = 1
-        result.append(self.rendercomponentstr(i[0], i[1]))
+        result.append(self.rendercomponentstr(i[0], i[1], 'c'))
       if spare is not None:
         result.append('<img src="img/{0}.png" class="spare" title="{1}">'.format(bimap[spare], getbaseitem(spare)))
-      result.append('<br class="clear"><br>')
+      result.append('</div>')
     self.renderbuildable(uniqueitems.keys())
     sih('combinations', ''.join(result))
 
   def renderbuildable(self, uniqueitems):
     result = []
     for c in uniqueitems:
-      result.append(self.rendercomponentstr(c[0],c[1]))
+      result.append(self.rendercomponentstr(c[0],c[1], 'b'))
     sih('buildable', ''.join(result))
 
+  def tipout(self, typ):
+    if typ == 'b':
+      did = 'buildabletip'
+    else:
+      did = 'combinestip'
+    sih(did, '')
+
+  def tip(self, typ, c):
+    if typ == 'b':
+      did = 'buildabletip'
+    else:
+      did = 'combinestip'
+    itemname = combines.get((c[0],c[1]), 'ohno')
+    itemtext = items.get(itemname, 'ahhhhh')
+    itemtitle = '{0}: {1}'.format(itemname, itemtext)
+    sih(did, itemtitle)
+
+
   # __pragma__('kwargs')
-  def rendercomponentstr(self, c1, c2):
+  def rendercomponentstr(self, c1, c2, typ):
     c1idx = bimap[c1]
     c2idx = bimap[c2]
     if c1idx > c2idx:
@@ -328,12 +308,15 @@ class TI(object):
     c2name = getbaseitem(c2)
     itemname = combines.get((c1,c2), 'ohno')
     itemtext = items.get(itemname, 'ahhhhh')
+    itemtitle = '{0}: {1}'.format(itemname, itemtext)
     return '''
       <div class="component">
-        <img src="img/{c1}.png" title="{c1name}" class="minit">
-        <img src="img/{c2}.png" title="{c2name}" class="minib">
-        <img src="img/{c1}{c2}.png" title="{itemname}: {itemtext}" class="component">
-      </div>'''.format(c1 = c1idx, c2 = c2idx, c1name = c1name, c2name = c2name, itemname = itemname, itemtext = itemtext)
+        <div class="minit"><img src="img/{c1i}.png" title="{c1name}" class="minit"></div>
+        <div class="minib"><img src="img/{c2i}.png" title="{c2name}" class="minib"></div>
+        <div class="combitem">
+          <img src="img/{c1i}{c2i}.png" title="{itemtitle}" onmouseover='ti.ti.tip("{typ}", "{c1}{c2}")' onmouseout='ti.ti.tipout("{typ}")' class="component">
+        </div>
+      </div>'''.format(c1i = c1idx, c2i = c2idx, c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name, itemtitle = itemtitle, typ = typ)
   # __pragma__('nokwargs')
 
   def mkbuttons(self):
