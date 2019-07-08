@@ -13,10 +13,12 @@
     </script>
     <style>
       body { background-color: #000; color: #fff; }
-      h2 {
+      div.header {
         color: #cacaf0;
         font-size: 2em;
         font-variant: small-caps;
+        width: 100%;
+        padding-bottom: 6px;
       }
       hr { border: 4px solid #303060; }
       img.del:hover { filter: sepia(100%) saturate(300%) brightness(50%) hue-rotate(300deg); }
@@ -59,18 +61,18 @@
     </style>
   </head>
   <body>
-    <h2>Shop:</h2>
+    <div class="header">Shop:</div>
     <div id="baseitems" width="100%"></div>
     <hr>
-    <h2>Have:</h2>
+    <div class="header">Have:</div>
     <div id="items" width="100%"></div>
     <hr>
-    <h2>Buildable:</h2>
+    <div class="header">Buildable:</div>
     <div id="buildabletip" class="tip"></div>
     <div id="buildable" width="100%"></div>
     <br class="clear">
     <hr>
-    <h2>Combinations:</h2>
+    <div class="header">Combinations:</div>
     <div id="combinestip" class="tip"></div>
     <div id="combinations" class="grid" width="100%"></div>
     <br class="clear">
