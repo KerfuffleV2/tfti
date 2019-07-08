@@ -13,7 +13,11 @@
     </script>
     <style>
       body { background-color: #000; color: #fff; }
-      h2 { color: #9090e0; }
+      h2 {
+        color: #cacaf0;
+        font-size: 2em;
+        font-variant: small-caps;
+      }
       hr { border: 4px solid #303060; }
       img.del:hover { filter: sepia(100%) saturate(300%) brightness(50%) hue-rotate(300deg); }
       img.add:hover { filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg); }
@@ -24,6 +28,7 @@
       div.minit { grid-area: minit; }
       div.minib { grid-area: minib; }
       div.item { grid-area: item; }
+
       div.component {
         float: left;
         display: grid;
@@ -37,7 +42,12 @@
         padding: 4px;
         border: 2px solid #557;
       }
-      div.tip { height: 1em; }
+      div.tip {
+        height: 1.5em;
+        font-size: 1.5em;
+        color: #cce;
+        width: 100%;
+      }
       div.grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(106px, 1fr));
@@ -49,21 +59,19 @@
     </style>
   </head>
   <body>
-    <h2>Click to add item</h2>
+    <h2>Shop:</h2>
     <div id="baseitems" width="100%"></div>
     <hr>
-    <h2>Click to remove item</h2>
+    <h2>Have:</h2>
     <div id="items" width="100%"></div>
     <hr>
-    <h2>Buildable items</h2>
-    <div id="buildabletip" class="tip" width="100%"></div>
-    <br class="clear">
+    <h2>Buildable:</h2>
+    <div id="buildabletip" class="tip"></div>
     <div id="buildable" width="100%"></div>
     <br class="clear">
     <hr>
-    <h2>Combinations</h2>
-    <div id="combinestip" class="tip" width="100%"></div>
-    <br class="clear">
+    <h2>Combinations:</h2>
+    <div id="combinestip" class="tip"></div>
     <div id="combinations" class="grid" width="100%"></div>
     <br class="clear">
     <p>by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></p>
