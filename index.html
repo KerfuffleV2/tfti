@@ -18,11 +18,32 @@
       img.del:hover { filter: sepia(100%) saturate(300%) brightness(50%) hue-rotate(300deg); }
       img.add:hover { filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg); }
       img.spare { opacity: 0.6; padding-left: 10px; }
-      img.minit { height: 32px; width: 32px; position: absolute; top: 0; left: 0; opacity: 0.9; }
-      img.minib { height: 32px; width: 32px; position: absolute; top: 32px; left: 0; opacity: 0.9; }
-      img.component { float: left; position: relative; top: 0; left: 32px; }
-      div.component { float: left; position: relative; width: 96px; padding-right: 16px; }
+      img.minit { height: 32px; width: 32px; opacity: 0.9; }
+      img.minib { height: 32px; width: 32px; opacity: 0.9; }
+      img.component { float: left; }
+      div.minit { grid-area: minit; }
+      div.minib { grid-area: minib; }
+      div.item { grid-area: item; }
+      div.component {
+        float: left;
+        display: grid;
+        grid-template-columns: 32px 32px 32px 10px;
+        grid-template-rows: 32px 32px;
+        grid-template-areas:
+          "minit item item ."
+          "minib item item ."
+      }
+      div.combinationscontainer {
+        padding: 4px;
+        border: 2px solid #99a;
+      }
       div.tip { height: 1em; }
+      div.grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(106px, 1fr));
+        grid-gap: 6px;
+      }
+      div#combinations { width: 100%; }
       #baseitems, #items { height: 64px; }
       br.clear { clear: both; }
     </style>
@@ -43,7 +64,7 @@
     <h2>Combinations</h2>
     <div id="combinestip" class="tip" width="100%"></div>
     <br class="clear">
-    <div id="combinations" width="100%"></div>
+    <div id="combinations" class="grid" width="100%"></div>
     <br class="clear">
     <p>by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></p>
   </body>

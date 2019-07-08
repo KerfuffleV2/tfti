@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-07 15:15:16
+// Transcrypt'ed from Python, 2019-07-08 01:07:54
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var baseitem = dict ({'s': 'sword', 'b': 'bow', 'r': 'rod', 't': 'tear', 'v': 'armor', 'c': 'cloak', 'e': 'belt', 'u': 'spatula'});
@@ -55,80 +55,6 @@ export var getbaseitem = function (s, fallback) {
 		var fallback = null;
 	};
 	return baseitem.py_get (s.strip (), fallback);
-};
-export var interactive = function () {
-	var prompt = '\n{0}\n> '.format (', '.join ((function () {
-		var __accu0__ = [];
-		for (var [k, v] of baseitem.py_items ()) {
-			__accu0__.append ('{0}={1}'.format (k, v));
-		}
-		return py_iter (__accu0__);
-	}) ()));
-	var validchar = ''.join (baseitem.py_keys ());
-	while (true) {
-		var inpstr = input (prompt);
-		var inp = list ((function () {
-			var __accu0__ = [];
-			for (var c of inpstr) {
-				if (__in__ (c, validchar)) {
-					__accu0__.append (c);
-				}
-			}
-			return py_iter (__accu0__);
-		}) ());
-		var inplen = len (inp);
-		if (inplen == 0) {
-			continue;
-		}
-		else if (inplen > 8) {
-			print ('!! No sane person has more than 8 items!');
-			continue;
-		}
-		else if (inplen & 1) {
-			inp.append (' ');
-		}
-		var result = uniquepairs (inp);
-		if (len (result) == 0) {
-			continue;
-		}
-		print ('');
-		var uniqueitems = dict ({});
-		for (var p of sorted (result)) {
-			var spare = null;
-			var py_items = [];
-			for (var i of p) {
-				if (i [0] == ' ') {
-					var spare = getbaseitem (i [1]);
-					continue;
-				}
-				var itemname = combines [i];
-				var componentstr = '+'.join ((function () {
-					var __accu0__ = [];
-					for (var i2 of i) {
-						__accu0__.append (getbaseitem (''.join (i2)) || '');
-					}
-					return py_iter (__accu0__);
-				}) ());
-				if (spare) {
-					var sparestr = ' (+ {0})'.format (spare);
-				}
-				else {
-					var sparestr = '';
-				}
-				var itemstr = '{0:>17}:{1:25}'.format (componentstr, itemname);
-				uniqueitems [itemname] = itemstr;
-				py_items.append (itemstr);
-			}
-			print ('{0}{1}'.format (' | '.join (py_items), sparestr));
-		}
-		print ('\n** Possible: {0}'.format (', '.join ((function () {
-			var __accu0__ = [];
-			for (var x of uniqueitems.py_values ()) {
-				__accu0__.append (x.strip ());
-			}
-			return py_iter (__accu0__);
-		}) ())));
-	}
 };
 export var sih = function (k, v) {
 	document.getElementById (k).innerHTML = v;
@@ -207,6 +133,7 @@ export var TI =  __class__ ('TI', [object], {
 			if (__in__ (sk, seen)) {
 				continue;
 			}
+			result.append ('<div class="combinationscontainer">');
 			seen.add (sk);
 			var spare = null;
 			for (var i of p) {
@@ -220,7 +147,7 @@ export var TI =  __class__ ('TI', [object], {
 			if (spare !== null) {
 				result.append ('<img src="img/{0}.png" class="spare" title="{1}">'.format (bimap [spare], getbaseitem (spare)));
 			}
-			result.append ('<br class="clear"><br>');
+			result.append ('</div>');
 		}
 		self.renderbuildable (uniqueitems.py_keys ());
 		sih ('combinations', ''.join (result));
@@ -282,7 +209,7 @@ export var TI =  __class__ ('TI', [object], {
 		var itemname = combines.py_get (tuple ([c1, c2]), 'ohno');
 		var itemtext = py_items.py_get (itemname, 'ahhhhh');
 		var itemtitle = '{0}: {1}'.format (itemname, itemtext);
-		return '\n      <div class="component">\n        <img src="img/{c1i}.png" title="{c1name}" class="minit">\n        <img src="img/{c2i}.png" title="{c2name}" class="minib">\n        <img src="img/{c1i}{c2i}.png" title="{itemtitle}" onmouseover=\'ti.ti.tip("{typ}", "{c1}{c2}")\' onmouseout=\'ti.ti.tipout("{typ}")\' class="component">\n      </div>'.format (__kwargtrans__ ({c1i: c1idx, c2i: c2idx, c1: c1, c2: c2, c1name: c1name, c2name: c2name, itemtitle: itemtitle, typ: typ}));
+		return '\n      <div class="component">\n        <div class="minit"><img src="img/{c1i}.png" title="{c1name}" class="minit"></div>\n        <div class="minib"><img src="img/{c2i}.png" title="{c2name}" class="minib"></div>\n        <div class="combitem">\n          <img src="img/{c1i}{c2i}.png" title="{itemtitle}" onmouseover=\'ti.ti.tip("{typ}", "{c1}{c2}")\' onmouseout=\'ti.ti.tipout("{typ}")\' class="component">\n        </div>\n      </div>'.format (__kwargtrans__ ({c1i: c1idx, c2i: c2idx, c1: c1, c2: c2, c1name: c1name, c2name: c2name, itemtitle: itemtitle, typ: typ}));
 	});},
 	get mkbuttons () {return __get__ (this, function (self) {
 		var result = [];
