@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-08 01:07:54
+// Transcrypt'ed from Python, 2019-07-09 13:56:52
 var __name__ = 'org.transcrypt.__runtime__';
 export var __envir__ = {};
 __envir__.interpreter_name = 'python';
@@ -2185,7 +2185,7 @@ export var Exception =  __class__ ('Exception', [BaseException], {
 		catch (__except0__) {
 			self.stack = 'No stack trace available';
 		}
-	});},
+	}, '__init__');},
 	get __repr__ () {return __get__ (this, function (self) {
 		if (len (self.__args__) > 1) {
 			return '{}{}'.format (self.__class__.__name__, repr (tuple (self.__args__)));
@@ -2196,7 +2196,7 @@ export var Exception =  __class__ ('Exception', [BaseException], {
 		else {
 			return '{}()'.format (self.__class__.__name__);
 		}
-	});},
+	}, '__repr__');},
 	get __str__ () {return __get__ (this, function (self) {
 		if (len (self.__args__) > 1) {
 			return str (tuple (self.__args__));
@@ -2207,31 +2207,31 @@ export var Exception =  __class__ ('Exception', [BaseException], {
 		else {
 			return '';
 		}
-	});}
+	}, '__str__');}
 });
 export var IterableError =  __class__ ('IterableError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, error) {
 		Exception.__init__ (self, "Can't iterate over non-iterable", __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var StopIteration =  __class__ ('StopIteration', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, error) {
 		Exception.__init__ (self, 'Iterator exhausted', __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var ValueError =  __class__ ('ValueError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var KeyError =  __class__ ('KeyError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var AssertionError =  __class__ ('AssertionError', [Exception], {
 	__module__: __name__,
@@ -2242,31 +2242,31 @@ export var AssertionError =  __class__ ('AssertionError', [Exception], {
 		else {
 			Exception.__init__ (self, __kwargtrans__ ({error: error}));
 		}
-	});}
+	}, '__init__');}
 });
 export var NotImplementedError =  __class__ ('NotImplementedError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var IndexError =  __class__ ('IndexError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var AttributeError =  __class__ ('AttributeError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var py_TypeError =  __class__ ('py_TypeError', [Exception], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self, message, error) {
 		Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
-	});}
+	}, '__init__');}
 });
 export var Warning =  __class__ ('Warning', [Exception], {
 	__module__: __name__,
@@ -2401,7 +2401,7 @@ export var __Terminal__ =  __class__ ('__Terminal__', [object], {
 			self.element.style.padding = '5px';
 			self.element.innerHTML = '_';
 		}
-	});},
+	}, '__init__');},
 	get print () {return __get__ (this, function (self) {
 		var sep = ' ';
 		var end = '\n';
@@ -2442,7 +2442,7 @@ export var __Terminal__ =  __class__ ('__Terminal__', [object], {
 				return __accu0__;
 			}) ()));
 		}
-	});},
+	}, 'print');},
 	get input () {return __get__ (this, function (self, question) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
@@ -2462,7 +2462,7 @@ export var __Terminal__ =  __class__ ('__Terminal__', [object], {
 		var answer = window.prompt ('\n'.join (self.buffer.py_split ('\n').__getslice__ (-(8), null, 1)));
 		self.print (answer);
 		return answer;
-	});}
+	}, 'input');}
 });
 export var __terminal__ = __Terminal__ ();
 export var print = __terminal__.print;
