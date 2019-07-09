@@ -1,168 +1,29 @@
 # Note that there's a lot of dumb/unidiomatic code here to work around Transcrypt weirdness.
 
 # __pragma__ ('skip')
-document = console = __pragma__ = object()
+document = console = ITEMS = __pragma__ = object()
 # __pragma__('noskip')
 
-baseitem = {
-  's': 'sword',
-  'b': 'bow',
-  'r': 'rod',
-  't': 'tear',
-  'v': 'armor',
-  'c': 'cloak',
-  'e': 'belt',
-  'u': 'spatula',
-}
+baseitem = ('sword', 'bow', 'rod', 'tear', 'armor', 'cloak', 'belt', 'spatula')
 
-itemorder = 'sbrtvceu'
+itemsj = ITEMS
 
-bimap = { 's': 0, 'b': 1, 'r': 2, 't': 3, 'v': 4, 'c': 5, 'e': 6, 'u': 7 }
+class Item(object):
+  def __init__(self, itemj):
+    self.combine = itemj['comp']
+    self.text = itemj['desc']
+    self.name = itemj['name']
+    self.score = itemj['score']
 
+class Items(object):
+  def __init__(self, items):
+    self.bycombine = {}
+    self.byname = {}
+    for itemj in itemsj:
+      item = Item(itemj)
+      self.bycombine[item.combine] = item
+      self.byname[item.name] = item
 
-items = {
-  "Infinity Edge": "Critical Strike damage is increased by 100 percent.",
-  "Sword of the Divine": "5 percent chance each second to gain 100 percent crit.",
-  "Hextech Gunblade": "Heal 25 percent of damage dealt.",
-  "Spear of Shojin": "After casting an ability, recover 15 percent of remaining maximum Mana per attack.",
-  "Guardian Angel": "Revive with 500 HP.",
-  "The Bloodthirster": "35 percent Lifesteal.",
-  "Zeke's Herald": "Allies around you on combat gain 10 percent Attack speed.",
-  "Youmuu's Ghostblade": "You are an Assassi",
-  "Sword of the Divine": "5 percent chance each second to gain 100 percent crit.",
-  "Rapid Firecannon": "Double your attack range. Attacks cannot miss.",
-  "Guinsoo's Rageblade": "Gain 5 percent stacking AS on hit. Stacks infinitely.",
-  "Stattik Shiv": "Every third attack splashes 100 magic damage.",
-  "Phantom Dancer": "Dodge all crits.",
-  "Cursed Blade": "Chance to shrink on hit: removes 1 star.",
-  "Titanic Hydra": "Attacks deal 10 percent of the wearer's maximum HP as bonus splash damage.",
-  "Blade of the Ruined King": "You are a Blademaster.",
-  "Hextech Gunblade": "Heals 25% of damage dealt.",
-  "Guinsoo's Rageblade": "Gain 3% stacking Attack Speed on hit. Stacks indefinitely.",
-  "Rabadon's Deathcap": "Gain 50% Ability Damage.",
-  "Luden's Echo": "Deal 100 Splash Damage on ability hit.",
-  "Locket of the Iron Solari": "At the start of combat, adjacent allies get 200 Shield.",
-  "Ionic Spark": "Enemies take damage whenever they cast a spell.",
-  "Morellonomicon": "Spells burn 5% of enemy's max HP per second.",
-  "Yummi": "Makes Champion a Sorcerer.",
-  "Spear of Shojin": "After casting an ability, recover 15% of remaining maximum Mana per attack.",
-  "Stattik Shiv": "Every 3rd attack deals 100 splash magic damage.",
-  "Luden's Echo": "Deal 100 splash damage on ability hit.",
-  "Seraph's Embrace": "Regain 20 Mana with each spell cast.",
-  "Frozen Heart": "Adjacent enemies lose 20% Attack Speed.",
-  "Hush": "Attacks have a high chance to Silence.",
-  "Redemption": "On death, heal all nearby allies for 1000 HP.",
-  "Darkin": "You are a Demon.",
-  "Guardian Angel": "Revive with 500HP.",
-  "Phantom Dancer": "Dodge all crits.",
-  "Locket of the Iron Solari": "On combat start, adjacent allies get 200 shield.",
-  "Frozen Heart": "Adjacent enemies lose 20% Attack Speed.",
-  "Thornmail": "Reflect 35% of damage taken by attacks.",
-  "Sword Breaker": "Attacks have a chance to disarm the enemy.",
-  "Red Buff": "Attacks burn for 2.5% of max HP and disable healing.",
-  "Knight's Vow": "You are a Knight.",
-  "Blood Thirster": "50% Lifesteal.",
-  "Cursed Blade": "Small chance to demote enemy unit by one star on hit.",
-  "Ionic Spark": "Whenever an enemy casts a spell they take damage.",
-  "Hush": "Attacks have a high chance to Silence.",
-  "Sword Breaker": "Attacks have a chance to disarm the enemy.",
-  "Dragon's Claw": "83% resistance to magic damage.",
-  "Zephyr": "Banish an enemy for five seconds on combat start.",
-  "Runaan's Hurricane": "Attacks hit up to two extra targets for 50% of normal damage.",
-  "Stark's Fervor": "Allies around you on combat begin gain 10% Attack Speed.",
-  "Titanic Hydra": "Attacks deal 10% of the wearer's maximum HP as bonus splash damage.",
-  "Morellonomicon": "Spells burn 5% of the enemy's max HP per second.",
-  "Redemption": "On death, heal all nearby allies for 1000 HP.",
-  "Red Buff": "Attacks burn for 2.5% of max HP and disable healing.",
-  "Zephyr": "Banish an enemy for five seconds on combat start.",
-  "Warmog's Armor": "Regenerate 3% max Health per second.",
-  "Frozen Mallet": "The wearer is also a Glacial.",
-  "Youmuu's Ghostblade": "You are an Assassin.",
-  "Blade of the Ruined King": "You are a Blademaster",
-  "Yuumi": "You are a Sorcerer.",
-  "Darkin": "You are a Demon.",
-  "Knight's Vow": "You are a Knight.",
-  "Runaan's Hurricane": "Attacks hit additional enemies which deal 50% of normal damage.",
-  "Frozen Mallet": "You are a Glacial.",
-  "Force of Nature": "+1 to your unit cap.",
-}
-
-combines_ = {
-  "ss": "Infinity Edge",
-  "sb": "Sword of the Divine",
-  "sr": "Hextech Gunblade",
-  "st": "Spear of Shojin",
-  "sv": "Guardian Angel",
-  "sc": "The Bloodthirster",
-  "se": "Zeke's Herald",
-  "su": "Youmuu's Ghostblade",
-  "bs": "Sword of the Divine",
-  "bb": "Rapid Firecannon",
-  "br": "Guinsoo's Rageblade",
-  "bt": "Stattik Shiv",
-  "bv": "Phantom Dancer",
-  "bc": "Cursed Blade",
-  "be": "Titanic Hydra",
-  "bu": "Blade of the Ruined King",
-  "rs": "Hextech Gunblade",
-  "rb": "Guinsoo's Rageblade",
-  "rr": "Rabadon's Deathcap",
-  "rt": "Luden's Echo",
-  "rv": "Locket of the Iron Solari",
-  "rc": "Ionic Spark",
-  "re": "Morellonomicon",
-  "ru": "Yummi",
-  "ts": "Spear of Shojin",
-  "tb": "Stattik Shiv",
-  "tr": "Luden's Echo",
-  "tt": "Seraph's Embrace",
-  "tv": "Frozen Heart",
-  "tc": "Hush",
-  "te": "Redemption",
-  "tu": "Darkin",
-  "vs": "Guardian Angel",
-  "vb": "Phantom Dancer",
-  "vr": "Locket of the Iron Solari",
-  "vt": "Frozen Heart",
-  "vv": "Thornmail",
-  "vc": "Sword Breaker",
-  "ve": "Red Buff",
-  "vu": "Knight's Vow",
-  "cs": "The Bloodthirster",
-  "cb": "Cursed Blade",
-  "cr": "Ionic Spark",
-  "ct": "Hush",
-  "cv": "Sword Breaker",
-  "cc": "Dragon's Claw",
-  "ce": "Zephyr",
-  "cu": "Runaan's Hurricane",
-  "es": "Stark's Fervor",
-  "eb": "Titanic Hydra",
-  "er": "Morellonomicon",
-  "et": "Redemption",
-  "ev": "Red Buff",
-  "ec": "Zephyr",
-  "ee": "Warmog's Armor",
-  "eu": "Frozen Mallet",
-  "us": "Youmuu's Ghostblade",
-  "ub": "Blade of the Ruined King",
-  "ur": "Yuumi",
-  "ut": "Darkin",
-  "uv": "Knight's Vow",
-  "uc": "Runaan's Hurricane",
-  "ue": "Frozen Mallet",
-  "uu": "Force of Nature",
-}
-
-combines = None
-
-
-def mkcombines():
-  global combines
-  result = []
-  for k,v in combines_.items():
-    result.append((tuple(sorted(tuple(k))), v))
-  combines = dict(result)
 
 # Modified from https://stackoverflow.com/a/21762051
 def uniquepairs(l):
@@ -193,10 +54,6 @@ def uniquepairs(l):
   return result
 
 
-def getbaseitem(s, fallback = None):
-  return baseitem.get(s.strip(), fallback)
-
-
 def sih(k, v):
   document.getElementById(k).innerHTML = v
 
@@ -204,6 +61,7 @@ def sih(k, v):
 class TI(object):
   def __init__(self):
     self.items = {}
+    self.wanted = set()
     self.ready = False
 
   def setready(self):
@@ -212,6 +70,7 @@ class TI(object):
   def incitem(self, i):
     if not self.ready or sum(self.items.values()) > 7:
       return
+    i = int(i)
     itemcount = self.items.get(i, 0)
     self.items[i] = itemcount + 1
     self.render()
@@ -219,28 +78,29 @@ class TI(object):
   def decitem(self, i):
     if not self.ready:
       return
+    i = int(i)
     itemcount = max(self.items.get(i, 0) - 1, 0)
     self.items[i] = itemcount
     self.render()
 
   def itemstostr(self):
     result = []
-    for k in itemorder:
+    for k in range(8):
       count = self.items.get(k, 0)
       if count > 0:
         for _ in range(count):
-          result.append(k)
+          result.append(str(k))
     return ''.join(result)
 
   def render(self):
     self.renderitems()
     self.rendercombinations()
+    self.renderwanted()
 
   def renderitems(self):
     result = []
-    for iid in list(self.itemstostr()):
-      iidx = bimap[iid]
-      result.append('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem(\'{2}\')">'.format(iidx, baseitem[iid], iid))
+    for iidx in list(self.itemstostr()):
+      result.append('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem({2})">'.format(iidx, baseitem[int(iidx)], iidx))
     sih('items', ''.join(result))
 
   def rendercombinations(self):
@@ -269,7 +129,7 @@ class TI(object):
         uniqueitems[''.join(i)] = 1
         result.append(self.rendercomponentstr(i[0], i[1], 'c'))
       if spare is not None:
-        result.append('<img src="img/{0}.png" class="spare" title="{1}">'.format(bimap[spare], getbaseitem(spare)))
+        result.append('<img src="img/{0}.png" class="spare" title="{1}">'.format(spare, baseitem[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.keys())
     sih('combinations', ''.join(result))
@@ -277,58 +137,95 @@ class TI(object):
   def renderbuildable(self, uniqueitems):
     result = []
     for c in uniqueitems:
-      result.append(self.rendercomponentstr(c[0],c[1], 'b'))
+      result.append(self.rendercomponentstr(c[0], c[1], 'b'))
     sih('buildable', ''.join(result))
+
+  def mkwantedoptions(self):
+    sitems = sorted(items.bycombine.values(), key = lambda i: i.name)
+    result = ['<option></option>']
+    for item in sitems:
+      result.append('<option value="{0}">{1}</option>'.format(item.combine, item.name))
+    sih('wantedselect', ''.join(result))
 
   def tipout(self, typ):
     if typ == 'b':
       did = 'buildabletip'
-    else:
+    elif typ == 't':
       did = 'combinestip'
+    else:
+      return
     sih(did, '')
 
   def tip(self, typ, c):
     if typ == 'b':
       did = 'buildabletip'
-    else:
+    elif typ == 't':
       did = 'combinestip'
-    itemname = combines.get((c[0],c[1]), 'ohno')
-    itemtext = items.get(itemname, 'ahhhhh')
-    itemtitle = '{0}: {1}'.format(itemname, itemtext)
+    else:
+      return
+    item = items.bycombine[c]
+    itemtitle = '{0}: {1}'.format(item.name, item.text)
     sih(did, itemtitle)
 
+  def setwanted(self, thisarg):
+    if len(self.wanted) >= 16:
+      return
+    self.wanted.add(thisarg.value)
+    thisarg.value = ''
+    self.renderwanted()
+
+  def delwanted(self, c):
+    self.wanted.remove(c)
+    self.renderwanted()
 
   # __pragma__('kwargs')
-  def rendercomponentstr(self, c1, c2, typ):
-    c1idx = bimap[c1]
-    c2idx = bimap[c2]
-    if c1idx > c2idx:
-      c1idx,c2idx = c2idx,c1idx
-    c1name = getbaseitem(c1)
-    c2name = getbaseitem(c2)
-    itemname = combines.get((c1,c2), 'ohno')
-    itemtext = items.get(itemname, 'ahhhhh')
-    itemtitle = '{0}: {1}'.format(itemname, itemtext)
+  def renderwanted(self):
+    result = []
+    for c in self.wanted:
+      if c[0] == c[1]:
+        havec = self.items.get(int(c[0]), 0)
+        c1buildable = havec > 0
+        c2buildable = buildable = havec > 1
+      else:
+        c1buildable = self.items.get(int(c[0]), 0) > 0
+        c2buildable = self.items.get(int(c[1]), 0) > 0
+        buildable = c1buildable and c2buildable
+      result.append(self.rendercomponentstr(c[0], c[1], 'w',
+        minitclass = 'showdel' if not c1buildable else '',
+        minibclass = 'showdel' if not c2buildable else '',
+        imgclass = 'showdel' if not buildable else '',
+        imgextra = "onclick='ti.ti.delwanted(\"{0}\")'".format(c)
+      ))
+    sih('wanted', ''.join(result))
+
+  def rendercomponentstr(self, c1, c2, typ, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
+    c1name = baseitem[int(c1)]
+    c2name = baseitem[int(c2)]
+    item = items.bycombine[''.join((c1,c2))]
+    itemtitle = '{0}: {1}'.format(item.name, item.text)
     return '''
       <div class="component">
-        <div class="minit"><img src="img/{c1i}.png" title="{c1name}" class="minit"></div>
-        <div class="minib"><img src="img/{c2i}.png" title="{c2name}" class="minib"></div>
+        <div class="minit"><img src="img/{c1}.png" title="{c1name}" class="minit {minitclass}"></div>
+        <div class="minib"><img src="img/{c2}.png" title="{c2name}" class="minib {minibclass}"></div>
         <div class="combitem">
-          <img src="img/{c1i}{c2i}.png" title="{itemtitle}" onmouseover='ti.ti.tip("{typ}", "{c1}{c2}")' onmouseout='ti.ti.tipout("{typ}")' class="component">
+          <img src="img/{c1}{c2}.png" title="{itemtitle}" class="component {imgclass}"
+               onmouseover='ti.ti.tip("{typ}", "{c1}{c2}")'
+               onmouseout='ti.ti.tipout("{typ}")' {imgextra}>
         </div>
-      </div>'''.format(c1i = c1idx, c2i = c2idx, c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name, itemtitle = itemtitle, typ = typ)
+      </div>'''.format(c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name,
+                       itemtitle = itemtitle, typ = typ,
+                       minibclass = minibclass, minitclass = minitclass,
+                       imgclass = imgclass, imgextra = imgextra)
   # __pragma__('nokwargs')
 
   def mkbuttons(self):
     result = []
-    for iid in list(itemorder):
-      iidx = bimap[iid]
-      result.append('<img src="img/{0}.png" class="add" title="{1}" onclick="ti.ti.incitem(\'{2}\')">'.format(iidx, baseitem[iid], iid))
+    for iidx in range(8):
+      result.append('<img src="img/{0}.png" class="add" title="{1}" onclick="ti.ti.incitem(\'{2}\')">'.format(iidx, baseitem[iidx], iidx))
     result.append('<br>')
     sih('baseitems', ''.join(result))
 
-
-
-mkcombines()
+items = Items()
 ti = TI()
 ti.mkbuttons()
+ti.mkwantedoptions()

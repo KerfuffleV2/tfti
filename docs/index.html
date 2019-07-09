@@ -6,83 +6,44 @@
     <title>TFT Item Combinations</title>
     <meta name="description" content="Teamfight Tactics item combination helper">
     <meta name="author" content="Kerfuffle">
+    <script type="text/javascript" src="./js/items.js"></script>
     <script type="module">
       import * as ti from "./js/ti.js";
       window.ti = ti;
       document.addEventListener("DOMContentLoaded", ti.ti.setready)
     </script>
-    <style>
-      :root {
-        --mini-size: 24px;
-        --item-size: 48px;
-        --col-size: 82px;
-        --pad-size: 10px;
-      }
-      body { background-color: #000; color: #fff; }
-      div.header {
-        color: #cacaf0;
-        font-size: 2em;
-        font-variant: small-caps;
-        width: 100%;
-        padding-bottom: 6px;
-      }
-      hr { border: 4px solid #303060; }
-      img.del:hover { filter: sepia(100%) saturate(300%) brightness(50%) hue-rotate(300deg); }
-      img.add:hover { filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg); }
-      img.spare { opacity: 0.6; padding-left: 10px; }
-      img { width: var(--item-size); height: var(--item-size); }
-      img.minit { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
-      img.minib { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
-      img.component { float: left; }
-      div.minit { grid-area: minit; }
-      div.minib { grid-area: minib; }
-      div.item { grid-area: item; }
-
-      div.component {
-        float: left;
-        padding: 2px;
-        display: grid;
-        grid-template-columns: repeat(3, var(--mini-size)) var(--pad-size);
-        grid-template-rows: repeat(2, var(--mini-size));
-        grid-template-areas:
-          "minit item item ."
-          "minib item item ."
-      }
-      div.combinationscontainer {
-        padding: 4px;
-        border: 2px solid #557;
-      }
-      div.tip {
-        height: 1.5em;
-        font-size: 1.5em;
-        color: #cce;
-        width: 100%;
-      }
-      div.grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
-        grid-gap: 6px;
-      }
-      div#combinations { width: 100%; }
-      #baseitems, #items { height: var(--item-size); }
-      br.clear { clear: both; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./css/tfti.css" media="all">
   </head>
   <body>
     <div class="header">Shop:</div>
-    <div id="baseitems" width="100%"></div>
+    <div id="baseitems"></div>
     <hr>
-    <div class="header">Have:</div>
-    <div id="items" width="100%"></div>
+    <div id="havewant">
+      <div><div class="header">Have:</div></div>
+      <div>
+        <div class="header">
+          Want:
+          <label class="cselect">
+            <select id="wantedselect" onchange="ti.ti.setwanted(this)">
+              <option></option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div>
+        <div id="items"></div>
+      </div>
+      <div id="wanted"></div>
+    </div>
     <hr>
     <div class="header">Buildable:</div>
     <div id="buildabletip" class="tip"></div>
-    <div id="buildable" width="100%"></div>
+    <div id="buildable"></div>
     <br class="clear">
     <hr>
     <div class="header">Combinations:</div>
     <div id="combinestip" class="tip"></div>
-    <div id="combinations" class="grid" width="100%"></div>
+    <div id="combinations" class="combogrid"></div>
     <br class="clear">
     <p>by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></p>
   </body>

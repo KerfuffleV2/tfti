@@ -1,0 +1,105 @@
+:root {
+  --mini-size: 24px;
+  --item-size: 48px;
+  --col-size: 82px;
+  --pad-size: 10px;
+  --addfilter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg);
+  --delfilter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
+}
+* { box-sizing: border-box; }
+
+body { background-color: #000; color: #fff; }
+div.header {
+  color: #cacaf0;
+  font-size: 1.8em;
+  font-variant: small-caps;
+  width: 100%;
+  padding-bottom: 6px;
+}
+hr { border: 4px solid #303060; }
+img.del:hover { filter: var(--delfilter); }
+img.add:hover { filter: var(--addfilter); }
+img.showdel { filter: var(--delfilter); }
+img.showadd { filter: var(--addfilter); }
+img.spare { opacity: 0.6; padding-left: 10px; }
+img { width: var(--item-size); height: var(--item-size); }
+img.minit { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
+img.minib { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
+img.component { float: left; }
+div.minit { grid-area: minit; }
+div.minib { grid-area: minib; }
+div.item { grid-area: item; }
+
+label.cselect { position: relative; display: inline-block; }
+.cselect select {
+    display: inline-block;
+    padding: 4px 3px 3px 5px;
+    margin: 0;
+    /* font: inherit; */
+    font-size: .7em;
+    outline:none; /* remove focus ring from Webkit */
+    line-height: 1.2;
+    background: #223;
+    color:#cacaf0;
+    border: 0;
+}
+
+/* Select arrow styling */
+.cselect:after {
+    content: "▼";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 60%;
+    line-height: 30px;
+    padding: 0 7px;
+    background: #223;
+    color: #ddf;
+    pointer-events: none;
+}
+
+ .no-pointer-events .cselect:after {
+    content: none;
+}
+
+div.component {
+  float: left;
+  padding: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, var(--mini-size)) var(--pad-size);
+  grid-template-rows: repeat(2, var(--mini-size));
+  grid-template-areas:
+    "minit item item ."
+    "minib item item ."
+}
+div.combinationscontainer {
+  padding: 4px;
+  border: 2px solid #557;
+}
+div.tip {
+  height: 1.5em;
+  font-size: 1.5em;
+  color: #cce;
+  width: 100%;
+}
+div.combogrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
+  grid-gap: 6px;
+}
+div#havewant {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "hheader wheader"
+    "hitems  witems";
+}
+div#wanted {
+  float: left;
+  min-height: var(--item-size);
+}
+div#combinations { width: 100%; }
+#baseitems, #items { height: var(--item-size); width: 100%; }
+br.clear { clear: both; }
