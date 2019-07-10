@@ -21,6 +21,7 @@ img.del:hover { filter: var(--delfilter); }
 img.add:hover { filter: var(--addfilter); }
 img.showdel { filter: var(--delfilter); }
 img.showadd { filter: var(--addfilter); }
+img.lowscore { opacity: 0.7; }
 img.spare { opacity: 0.6; padding-left: 10px; }
 img { width: var(--item-size); height: var(--item-size); }
 img.minit { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }

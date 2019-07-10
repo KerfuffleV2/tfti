@@ -16,7 +16,7 @@ class Item(object):
     self.score = itemj['score']
 
 class Items(object):
-  def __init__(self, items):
+  def __init__(self):
     self.bycombine = {}
     self.byname = {}
     for itemj in itemsj:
@@ -67,20 +67,30 @@ class TI(object):
   def setready(self):
     self.ready = True
 
+  def moditem(self, i, l):
+    i = int(i)
+    itemcount = self.items.get(i, 0)
+    self.items[i] = l(itemcount)
+
   def incitem(self, i):
     if not self.ready or sum(self.items.values()) > 7:
       return
-    i = int(i)
-    itemcount = self.items.get(i, 0)
-    self.items[i] = itemcount + 1
+    self.moditem(i, lambda ic: ic + 1)
     self.render()
 
   def decitem(self, i):
     if not self.ready:
       return
-    i = int(i)
-    itemcount = max(self.items.get(i, 0) - 1, 0)
-    self.items[i] = itemcount
+    self.moditem(i, lambda ic: max(0, ic - 1))
+    self.render()
+
+  def decfullitem(self, c):
+    if not self.ready:
+      return
+    decf = lambda ic: max(0, ic - 1)
+    self.moditem(c[0], decf)
+    self.moditem(c[1], decf)
+    self.tipout('b')
     self.render()
 
   def itemstostr(self):
@@ -103,6 +113,7 @@ class TI(object):
       result.append('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem({2})">'.format(iidx, baseitem[int(iidx)], iidx))
     sih('items', ''.join(result))
 
+  # __pragma__('kwargs')
   def rendercombinations(self):
     result = []
     itemstr = self.itemstostr()
@@ -115,30 +126,40 @@ class TI(object):
     up = uniquepairs(tuple(itemstr))
     uniqueitems = {}
     seen = set()
-    for p in sorted(up):
-      sk = ''.join(''.join(i) for i in p)
-      if sk in seen:
-        continue
-      result.append('<div class="combinationscontainer">')
-      seen.add(sk)
+    newup = []
+    for p in up:
+      newp = []
       spare = None
       for i in p:
         if i[0] == ' ':
           spare = i[1]
           continue
-        uniqueitems[''.join(i)] = 1
-        result.append(self.rendercomponentstr(i[0], i[1], 'c'))
+        newp.append(items.bycombine[''.join(i)])
+      newup.append((newp, spare))
+    for (pi, spare) in sorted(newup, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+      sk = ''.join(sorted(list(i.combine for i in pi)))
+      if sk in seen:
+        continue
+      result.append('<div class="combinationscontainer">')
+      seen.add(sk)
+      for thisitem in pi:
+        uniqueitems[thisitem.combine] = thisitem
+        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
+          imgclass = 'lowscore' if thisitem.score < 3 else ''))
       if spare is not None:
         result.append('<img src="img/{0}.png" class="spare" title="{1}">'.format(spare, baseitem[int(spare)]))
       result.append('</div>')
-    self.renderbuildable(uniqueitems.keys())
+    self.renderbuildable(uniqueitems.values())
     sih('combinations', ''.join(result))
 
   def renderbuildable(self, uniqueitems):
     result = []
-    for c in uniqueitems:
-      result.append(self.rendercomponentstr(c[0], c[1], 'b'))
+    for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
+      c = item.combine
+      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decfullitem('{0}')\"".format(c),
+        imgclass = 'lowscore' if item.score < 3 else ''))
     sih('buildable', ''.join(result))
+  # __pragma__('nokwargs')
 
   def mkwantedoptions(self):
     sitems = sorted(items.bycombine.values(), key = lambda i: i.name)
@@ -150,7 +171,7 @@ class TI(object):
   def tipout(self, typ):
     if typ == 'b':
       did = 'buildabletip'
-    elif typ == 't':
+    elif typ == 'c':
       did = 'combinestip'
     else:
       return
@@ -159,7 +180,7 @@ class TI(object):
   def tip(self, typ, c):
     if typ == 'b':
       did = 'buildabletip'
-    elif typ == 't':
+    elif typ == 'c':
       did = 'combinestip'
     else:
       return
