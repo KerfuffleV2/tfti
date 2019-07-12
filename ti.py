@@ -137,6 +137,7 @@ class TI(object):
         newp.append(items.bycombine[''.join(i)])
       newup.append((newp, spare))
     for (pi, spare) in sorted(newup, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+      pi = sorted(pi, reverse = True, key = lambda i: i.score)
       sk = ''.join(sorted(list(i.combine for i in pi)))
       if sk in seen:
         continue
