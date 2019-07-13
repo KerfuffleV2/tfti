@@ -109,4 +109,5 @@ div#wanted {
 }
 div#combinations { width: 100%; }
 #baseitems, #items { height: var(--item-size); width: 100%; }
+#buildable { min-height: calc(var(--item-size) + 4px); }
 br.clear { clear: both; }
