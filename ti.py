@@ -67,6 +67,12 @@ class TI(object):
   def setready(self):
     self.ready = True
 
+  def clearitems(self):
+    if not self.ready:
+      return
+    self.items = {}
+    self.render()
+
   def moditem(self, i, l):
     i = int(i)
     itemcount = self.items.get(i, 0)
