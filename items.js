@@ -4,7 +4,7 @@ var ITEMS =
     "comp": "00",
     "desc": "Critical Strike damage is increased by 100 percent.",
     "name": "Infinity Edge",
-    "score": 2
+    "score": 2.5
   },
   {
     "comp": "01",
@@ -26,9 +26,9 @@ var ITEMS =
   },
   {
     "comp": "04",
-    "desc": "Revive with 500HP.",
+    "desc": "Revive with 1000HP after 2 seconds.",
     "name": "Guardian Angel",
-    "score": 2
+    "score": 3
   },
   {
     "comp": "05",
@@ -38,14 +38,14 @@ var ITEMS =
   },
   {
     "comp": "06",
-    "desc": "Allies around you on combat begin gain 10% Attack Speed.",
-    "name": "Stark's Fervor",
+    "desc": "On combat start, wearer and allies 2 spaces to left and right gain 15% attack speed.",
+    "name": "Zeke's Herald",
     "score": 3
   },
   {
     "comp": "07",
     "desc": "You are an Assassin.",
-    "name": "Youmuu's Ghostblade",
+    "name": "Youmuu's Ghostblade. +20AD",
     "score": 3
   },
   {
@@ -56,14 +56,14 @@ var ITEMS =
   },
   {
     "comp": "12",
-    "desc": "Gain 3% stacking Attack Speed on hit. Stacks indefinitely.",
+    "desc": "Gain 4% stacking Attack Speed on hit. Stacks indefinitely.",
     "name": "Guinsoo's Rageblade",
     "score": 4
   },
   {
     "comp": "13",
-    "desc": "Every 3rd attack deals 100 splash magic damage.",
-    "name": "Stattik Shiv",
+    "desc": "Every 3rd attack deals 100 splash magic damage to up to 3 targets.",
+    "name": "Statikk Shiv",
     "score": 3
   },
   {
@@ -76,7 +76,7 @@ var ITEMS =
     "comp": "15",
     "desc": "Small chance to demote enemy unit by one star on hit.",
     "name": "Cursed Blade",
-    "score": 1
+    "score": 3
   },
   {
     "comp": "16",
@@ -86,7 +86,7 @@ var ITEMS =
   },
   {
     "comp": "17",
-    "desc": "You are a Blademaster",
+    "desc": "You are a Blademaster. +20% AS",
     "name": "Blade of the Ruined King",
     "score": 3
   },
@@ -98,31 +98,31 @@ var ITEMS =
   },
   {
     "comp": "23",
-    "desc": "Deal 100 splash damage on ability hit.",
+    "desc": "Deal 200 true splash damage on ability hit.",
     "name": "Luden's Echo",
-    "score": 1
+    "score": 2
   },
   {
     "comp": "24",
-    "desc": "On combat start, adjacent allies get 200 shield.",
+    "desc": "On combat start, shields wearer and allies 2 spaces to left and right for 300.",
     "name": "Locket of the Iron Solari",
-    "score": 3
+    "score": 2
   },
   {
     "comp": "25",
-    "desc": "Whenever an enemy casts a spell they take damage.",
+    "desc": "Whenever an enemy casts a spell they take 200 true damage.",
     "name": "Ionic Spark",
-    "score": 1
+    "score": 3
   },
   {
     "comp": "26",
-    "desc": "Spells burn 5% of the enemy's max HP per second.",
+    "desc": "Spells burn 3% of the enemy's max HP per second for 5 seconds.",
     "name": "Morellonomicon",
     "score": 4
   },
   {
     "comp": "27",
-    "desc": "You are a Sorcerer.",
+    "desc": "You are a Sorcerer. +20AP",
     "name": "Yuumi",
     "score": 3
   },
@@ -146,27 +146,27 @@ var ITEMS =
   },
   {
     "comp": "36",
-    "desc": "On death, heal all nearby allies for 1000 HP.",
+    "desc": "When reaching 25% health, heal all nearby allies for 1000 HP.",
     "name": "Redemption",
-    "score": 2
+    "score": 2.5
   },
   {
     "comp": "37",
     "desc": "You are a Demon.",
-    "name": "Darkin",
+    "name": "Darkin. +20 mana",
     "score": 3
   },
   {
     "comp": "44",
-    "desc": "Reflect 35% of damage taken by attacks.",
+    "desc": "Reflect 100% of physical damage mitigated from attacks as true damage.",
     "name": "Thornmail",
-    "score": 2
+    "score": 3
   },
   {
     "comp": "45",
     "desc": "Attacks have a chance to disarm the enemy.",
     "name": "Sword Breaker",
-    "score": 2
+    "score": 2.5
   },
   {
     "comp": "46",
@@ -176,7 +176,7 @@ var ITEMS =
   },
   {
     "comp": "47",
-    "desc": "You are a Knight.",
+    "desc": "You are a Knight. +20 armor",
     "name": "Knight's Vow",
     "score": 1
   },
@@ -194,20 +194,20 @@ var ITEMS =
   },
   {
     "comp": "57",
-    "desc": "Attacks hit additional enemies which deal 50% of normal damage.",
+    "desc": "Attacks hit an additional nearby enemy for 25% damage. Applies on-hits.",
     "name": "Runaan's Hurricane",
-    "score": 1
+    "score": 2.5
   },
   {
     "comp": "66",
-    "desc": "Regenerate 3% max Health per second.",
+    "desc": "Regenerate 6% of missing health per second.",
     "name": "Warmog's Armor",
-    "score": 3
+    "score": 4
   },
   {
     "comp": "67",
     "desc": "You are a Glacial.",
-    "name": "Frozen Mallet",
+    "name": "Frozen Mallet. +200HP",
     "score": 3
   },
   {
