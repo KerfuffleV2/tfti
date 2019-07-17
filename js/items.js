@@ -44,8 +44,8 @@ var ITEMS =
   },
   {
     "comp": "07",
-    "desc": "You are an Assassin.",
-    "name": "Youmuu's Ghostblade. +20AD",
+    "desc": "You are an Assassin. +20AD",
+    "name": "Youmuu's Ghostblade",
     "score": 3
   },
   {
@@ -152,8 +152,8 @@ var ITEMS =
   },
   {
     "comp": "37",
-    "desc": "You are a Demon.",
-    "name": "Darkin. +20 mana",
+    "desc": "You are a Demon. +20 mana",
+    "name": "Darkin",
     "score": 3
   },
   {
@@ -206,8 +206,8 @@ var ITEMS =
   },
   {
     "comp": "67",
-    "desc": "You are a Glacial.",
-    "name": "Frozen Mallet. +200HP",
+    "desc": "You are a Glacial. +200HP",
+    "name": "Frozen Mallet",
     "score": 3
   },
   {
