@@ -40,7 +40,7 @@ var ITEMS =
     "comp": "06",
     "desc": "On combat start, wearer and allies 2 spaces to left and right gain 15% attack speed.",
     "name": "Zeke's Herald",
-    "score": 3
+    "score": 3.5
   },
   {
     "comp": "07",
@@ -76,13 +76,13 @@ var ITEMS =
     "comp": "15",
     "desc": "Small chance to demote enemy unit by one star on hit.",
     "name": "Cursed Blade",
-    "score": 3
+    "score": 4
   },
   {
     "comp": "16",
     "desc": "Attacks deal 10% of the wearer's maximum HP as bonus splash damage.",
     "name": "Titanic Hydra",
-    "score": 4
+    "score": 3.5
   },
   {
     "comp": "17",
@@ -106,7 +106,7 @@ var ITEMS =
     "comp": "24",
     "desc": "On combat start, shields wearer and allies 2 spaces to left and right for 300.",
     "name": "Locket of the Iron Solari",
-    "score": 2
+    "score": 3.5
   },
   {
     "comp": "25",
@@ -142,7 +142,7 @@ var ITEMS =
     "comp": "35",
     "desc": "Attacks have a high chance to Silence.",
     "name": "Hush",
-    "score": 2
+    "score": 3
   },
   {
     "comp": "36",
@@ -172,7 +172,7 @@ var ITEMS =
     "comp": "46",
     "desc": "Attacks burn for 2.5% of max HP and disable healing.",
     "name": "Red Buff",
-    "score": 4
+    "score": 4.5
   },
   {
     "comp": "47",
@@ -190,7 +190,7 @@ var ITEMS =
     "comp": "56",
     "desc": "Banish an enemy for five seconds on combat start.",
     "name": "Zephyr",
-    "score": 4
+    "score": 3.5
   },
   {
     "comp": "57",
