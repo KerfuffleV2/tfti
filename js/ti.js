@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-24 02:06:34
+// Transcrypt'ed from Python, 2019-07-24 07:54:23
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var baseitem = tuple (['sword', 'bow', 'rod', 'tear', 'armor', 'cloak', 'belt', 'spatula']);
@@ -63,13 +63,68 @@ export var uniquepairs = function (l) {
 export var sih = function (k, v) {
 	document.getElementById (k).innerHTML = v;
 };
+export var UIPrefs =  __class__ ('UIPrefs', [object], {
+	__module__: __name__,
+	themes: tuple (['Dark', 'Light']),
+	iconsizes: tuple ([tuple (['Medium', '0.75']), tuple (['Large', '1.0']), tuple (['Small', '0.5'])]),
+	get __init__ () {return __get__ (this, function (self) {
+		self.iconsize = 0;
+		try {
+			var iconsizestr = localStorage.getItem ('iconsize');
+			if (iconsizestr !== null) {
+				var iconsznum = __mod__ (max (0, int (iconsizestr)), len (self.iconsizes));
+				console.log ('iconsize', iconsizestr, iconsznum);
+				self.seticonsize (iconsznum);
+			}
+		}
+		catch (__except0__) {
+			// pass;
+		}
+		self.theme = 0;
+		try {
+			var themestr = localStorage.getItem ('theme');
+			if (themestr !== null) {
+				var themenum = __mod__ (max (0, int (themestr)), len (self.themes));
+				self.settheme (themenum);
+				console.log ('theme', themestr, themenum);
+			}
+		}
+		catch (__except0__) {
+			// pass;
+		}
+	}, '__init__');},
+	get toggleiconsize () {return __get__ (this, function (self) {
+		var iconsznum = __mod__ (self.iconsize + 1, len (self.iconsizes));
+		self.seticonsize (iconsznum);
+	}, 'toggleiconsize');},
+	get seticonsize () {return __get__ (this, function (self, iconsznum) {
+		self.iconsize = iconsznum;
+		var __left0__ = self.iconsizes [iconsznum];
+		var sizename = __left0__ [0];
+		var scale = __left0__ [1];
+		document.documentElement.style.setProperty ('--icon-scale', scale);
+		localStorage.setItem ('iconsize', str (iconsznum));
+		sih ('iconsize', sizename);
+	}, 'seticonsize');},
+	get toggletheme () {return __get__ (this, function (self) {
+		var themenum = __mod__ (self.theme + 1, len (self.themes));
+		self.settheme (themenum);
+	}, 'toggletheme');},
+	get settheme () {return __get__ (this, function (self, themenum) {
+		var themename = self.themes [themenum];
+		self.theme = themenum;
+		document.documentElement.setAttribute ('data-theme', themename.lower ());
+		sih ('theme', themename);
+		localStorage.setItem ('theme', str (themenum));
+	}, 'settheme');}
+});
 export var TI =  __class__ ('TI', [object], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self) {
+		self.ui = UIPrefs ();
 		self.py_items = dict ({});
 		var itemstr = localStorage.getItem ('items');
 		if (itemstr !== null) {
-			console.log ('itemstr', itemstr);
 			for (var c of itemstr) {
 				self.moditem (c, (function __lambda__ (ic) {
 					return ic + 1;
@@ -78,7 +133,6 @@ export var TI =  __class__ ('TI', [object], {
 		}
 		var wantedstr = localStorage.getItem ('wanted');
 		if (wantedstr !== null) {
-			console.log ('wantedstr', wantedstr);
 			self.wanted = set (wantedstr.py_split (','));
 		}
 		else {
@@ -258,7 +312,7 @@ export var TI =  __class__ ('TI', [object], {
 				result.append (self.rendercomponentstr (thisitem.combine [0], thisitem.combine [1], 'c', __kwargtrans__ ({imgclass: (thisitem.score < 3 ? 'lowscore' : '')})));
 			}
 			if (spare !== null) {
-				result.append ('<img src="img/{0}.png" class="spare" title="{1}">'.format (spare, baseitem [int (spare)]));
+				result.append ('<div class="spare"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format (spare, baseitem [int (spare)]));
 			}
 			result.append ('</div>');
 		}
