@@ -107,22 +107,20 @@ div#havewant {
     "hheader wheader"
     "hitems  witems";
 }
-div#wanted {
-  float: left;
-  min-height: calc(var(--item-size) + var(--pad-size));
-}
-div#combinations { width: 100%; }
-#baseitems, #items {
+
+#baseitems, #items, #buildable, #wanted {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
   grid-gap: var(--gap-size);
-  min-height: var(--item-size);
-}
-#buildable {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
-  grid-gap: var(--gap-size);
   min-height: calc(var(--item-size) + var(--pad-size));
+}
+div#wanted {
+  float: left;
+  grid-gap: calc(var(--gap-size) * 0.66);
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
+}
+div#buildable {
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
 }
 
 div#footer { padding-top: .5em; }
