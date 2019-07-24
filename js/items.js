@@ -2,7 +2,7 @@ var ITEMS =
 [
   {
     "comp": "00",
-    "desc": "Critical Strike damage is increased by 100 percent.",
+    "desc": "Critical Strike damage is increased by 150%.",
     "name": "Infinity Edge",
     "score": 2.5
   },
@@ -58,7 +58,7 @@ var ITEMS =
     "comp": "12",
     "desc": "Gain 4% stacking Attack Speed on hit. Stacks indefinitely.",
     "name": "Guinsoo's Rageblade",
-    "score": 4
+    "score": 3
   },
   {
     "comp": "13",
@@ -74,7 +74,7 @@ var ITEMS =
   },
   {
     "comp": "15",
-    "desc": "Small chance to demote enemy unit by one star on hit.",
+    "desc": "20% chance to demote enemy unit by one star on hit.",
     "name": "Cursed Blade",
     "score": 4
   },
@@ -104,7 +104,7 @@ var ITEMS =
   },
   {
     "comp": "24",
-    "desc": "On combat start, shields wearer and allies 2 spaces to left and right for 300.",
+    "desc": "On combat start, shields wearer and allies 2 spaces to left and right for 200.",
     "name": "Locket of the Iron Solari",
     "score": 3.5
   },
@@ -116,7 +116,7 @@ var ITEMS =
   },
   {
     "comp": "26",
-    "desc": "Spells burn 3% of the enemy's max HP per second for 5 seconds.",
+    "desc": "Spells burn 5% of the enemy's max HP per second for 5 seconds.",
     "name": "Morellonomicon",
     "score": 4
   },
@@ -140,7 +140,7 @@ var ITEMS =
   },
   {
     "comp": "35",
-    "desc": "Attacks have a high chance to Silence.",
+    "desc": "Attacks have a 50% chance to Silence.",
     "name": "Hush",
     "score": 3
   },
@@ -164,7 +164,7 @@ var ITEMS =
   },
   {
     "comp": "45",
-    "desc": "Attacks have a chance to disarm the enemy.",
+    "desc": "Attacks have a 25% chance to disarm the enemy.",
     "name": "Sword Breaker",
     "score": 2.5
   },

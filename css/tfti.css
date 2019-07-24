@@ -16,6 +16,8 @@
   --border-color: #557;
   --header-color: #cacaf0;
   --link-color: #bbc;
+  --dropdown-color: #cacaf0;
+  --dropdown-background: #223;
 }
 
 [data-theme="light"] {
@@ -23,6 +25,8 @@
   --border-color: #225;
   --header-color: #335;
   --link-color: #007;
+  --dropdown-color: #eaeaf0;
+  --dropdown-background: var(--border-color);
 }
 
 * { box-sizing: border-box; }
@@ -107,22 +111,20 @@ div#havewant {
     "hheader wheader"
     "hitems  witems";
 }
-div#wanted {
-  float: left;
-  min-height: calc(var(--item-size) + var(--pad-size));
-}
-div#combinations { width: 100%; }
-#baseitems, #items {
+
+#baseitems, #items, #buildable, #wanted {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
   grid-gap: var(--gap-size);
-  min-height: var(--item-size);
-}
-#buildable {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
-  grid-gap: var(--gap-size);
   min-height: calc(var(--item-size) + var(--pad-size));
+}
+div#wanted {
+  float: left;
+  grid-gap: calc(var(--gap-size) * 0.66);
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
+}
+div#buildable {
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
 }
 
 div#footer { padding-top: .5em; }
@@ -158,38 +160,43 @@ li.footeritem a {
 
 br.clear { clear: both; }
 
-
-
-
-label.cselect { position: relative; display: inline-block; }
-.cselect select {
-    display: inline-block;
-    padding: 4px 3px 3px 5px;
-    margin: 0;
-    /* font: inherit; */
-    font-size: .7em;
-    outline:none; /* remove focus ring from Webkit */
-    line-height: 1.2;
-    background: #223;
-    color:#cacaf0;
-    border: 0;
+.cselect {
+  display: inline-block;
+	font-size: 14px;
+	font-family: sans-serif;
+	font-weight: 700;
+	color: var(--dropdown-background);
+	line-height: 1.3;
+	padding: .6em 1.4em .5em .8em;
+	width: auto;
+	max-width: 100%;
+	margin: 0;
+	border: 1px solid var(--border-color);
+	box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+	border-radius: .5em;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	background-color: var(--dropdown-color);
+	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+	  linear-gradient(to bottom, var(--dropdown-background) 0%, var(--dropdown-background) 100%);
+	background-repeat: no-repeat, repeat;
+	background-position: right .7em top 50%, 0 0;
+	background-size: .65em auto, 100%;
 }
-
-/* Select arrow styling */
-.cselect:after {
-    content: "▼";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 60%;
-    line-height: 30px;
-    padding: 0 7px;
-    background: #223;
-    color: #ddf;
-    pointer-events: none;
+.cselect::-ms-expand {
+	display: none;
 }
-
- .no-pointer-events .cselect:after {
-    content: none;
+.cselect:hover {
+	border-color: var(--header-color);
+}
+.cselect:focus {
+	border-color: var(--border-color);
+	color: var(--dropdown-color);
+	outline: none;
+}
+.cselect option {
+  background: var(--dropdown-background);
+  color: var(--dropdown-color);
+	font-weight: normal;
 }
