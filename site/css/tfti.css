@@ -5,10 +5,13 @@
   --pad-size: 10px;
   --addfilter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg);
   --delfilter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
+  --unbuildablefilter: sepia(100%) saturate(300%) brightness(90%) hue-rotate(290deg) sepia(40%) saturate(80%);
 }
 * { box-sizing: border-box; }
 
 body { background-color: #000; color: #fff; }
+hr { border: 4px solid #303060; }
+
 div.header {
   color: #cacaf0;
   font-size: 1.8em;
@@ -22,11 +25,10 @@ div.clearbutton {
   color: #a66;
   cursor: pointer;
 }
-hr { border: 4px solid #303060; }
+
 img.del:hover { filter: var(--delfilter); }
 img.add:hover { filter: var(--addfilter); }
-img.showdel { filter: var(--delfilter); }
-img.showadd { filter: var(--addfilter); }
+img.showunbuildable { filter: var(--unbuildablefilter); }
 img.lowscore { opacity: 0.7; }
 img.spare { opacity: 0.6; padding-left: 10px; }
 img { width: var(--item-size); height: var(--item-size); }
@@ -36,6 +38,55 @@ img.component { float: left; }
 div.minit { grid-area: minit; }
 div.minib { grid-area: minib; }
 div.item { grid-area: item; }
+
+div.component {
+  float: left;
+  padding: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, var(--mini-size)) var(--pad-size);
+  grid-template-rows: repeat(2, var(--mini-size));
+  grid-template-areas:
+    "minit item item ."
+    "minib item item ."
+}
+div.combinationscontainer {
+  padding: 4px;
+  border: 2px solid #557;
+}
+div.tip {
+  height: 1.2em;
+  font-size: 1.2em;
+  color: #cce;
+  width: 100%;
+}
+div.combogrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
+  grid-gap: 6px;
+}
+div#havewant {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "hheader wheader"
+    "hitems  witems";
+}
+div#wanted {
+  float: left;
+  min-height: calc(var(--item-size) + 4px);
+}
+div#combinations { width: 100%; }
+#baseitems, #items {
+  height: var(--item-size); width: 100%;
+}
+#buildable {
+  min-height: calc(var(--item-size) + 4px);
+}
+br.clear { clear: both; }
+
+
+
 
 label.cselect { position: relative; display: inline-block; }
 .cselect select {
@@ -69,45 +120,3 @@ label.cselect { position: relative; display: inline-block; }
  .no-pointer-events .cselect:after {
     content: none;
 }
-
-div.component {
-  float: left;
-  padding: 2px;
-  display: grid;
-  grid-template-columns: repeat(3, var(--mini-size)) var(--pad-size);
-  grid-template-rows: repeat(2, var(--mini-size));
-  grid-template-areas:
-    "minit item item ."
-    "minib item item ."
-}
-div.combinationscontainer {
-  padding: 4px;
-  border: 2px solid #557;
-}
-div.tip {
-  height: 1.5em;
-  font-size: 1.5em;
-  color: #cce;
-  width: 100%;
-}
-div.combogrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
-  grid-gap: 6px;
-}
-div#havewant {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    "hheader wheader"
-    "hitems  witems";
-}
-div#wanted {
-  float: left;
-  min-height: calc(var(--item-size) + 4px);
-}
-div#combinations { width: 100%; }
-#baseitems, #items { height: var(--item-size); width: 100%; }
-#buildable { min-height: calc(var(--item-size) + 4px); }
-br.clear { clear: both; }
