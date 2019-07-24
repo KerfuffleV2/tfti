@@ -28,4 +28,8 @@ The **Combinations** section shows all permutations of buildable items with the 
 2. You will need Transcrypt: https://www.transcrypt.org/ - I suggest following their instructions to set it up with a Python virtual environment.
 3. If on a Unix type OS, run `utils/build.sh`. Alternatively inspect the script and run the equivalent commands for your OS.
 
-You can serve a local version of the site by changing to the `site` directory and running `python3 -m http.server 8000` and then navigate to `http://127.0.0.1:8000/index.html`.
+# Tips
+
+1. You can serve a local version of the site by changing to the `site` directory and running `python3 -m http.server 8000` and then navigate to `http://127.0.0.1:8000/index.html`.
+
+2. To avoid having to ALT-TAB when the game is running, you can hit F9 to unlock the cursor in League. You probably need to be in a mode other than Fullscreen for this to work.
