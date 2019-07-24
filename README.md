@@ -24,8 +24,8 @@ The **Combinations** section shows all permutations of buildable items with the 
 
 # Building
 
-
 1. You will need a recent version of Python 3.x: https://python.org/
 2. You will need Transcrypt: https://www.transcrypt.org/ - I suggest following their instructions to set it up with a Python virtual environment.
-3. Run this command to convert the Python code to Javascript: `transcrypt -v -b -sf -f -n -m ti.py`
-4. Copy files from this repo and the generated Javascript in the `__target__` directory to a directory in the same structure as the `gh-pages` branch of this repo.
+3. If on a Unix type OS, run `utils/build.sh`. Alternatively inspect the script and run the equivalent commands for your OS.
+
+You can serve a local version of the site by changing to the `site` directory and running `python3 -m http.server 8000` and then navigate to `http://127.0.0.1:8000/index.html`.
