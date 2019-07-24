@@ -1,0 +1,19 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TFT Item Combinations: Clear settings</title>
+    <meta name="author" content="Kerfuffle">
+    <script type="module">
+      document.addEventListener("DOMContentLoaded", function () {
+        localStorage.clear();
+        document.getElementById('clearstatus').innerHTML = 'Completed.';
+       })
+    </script>
+  </head>
+  <body>
+    Clearing TFTI settings...<br>
+    <div id="clearstatus" style="float: left;">Pending.</div>
+  </body>
+</html>
