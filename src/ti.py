@@ -1,7 +1,7 @@
 # Note that there's a lot of dumb/unidiomatic code here to work around Transcrypt weirdness.
 
 # __pragma__ ('skip')
-document = console = ITEMS = __pragma__ = object()
+document = console = ITEMS = __pragma__ = localStorage = object()
 # __pragma__('noskip')
 
 baseitem = ('sword', 'bow', 'rod', 'tear', 'armor', 'cloak', 'belt', 'spatula')
@@ -61,11 +61,22 @@ def sih(k, v):
 class TI(object):
   def __init__(self):
     self.items = {}
-    self.wanted = set()
+    itemstr = localStorage.getItem('items')
+    if itemstr is not None:
+      console.log('itemstr', itemstr)
+      for c in itemstr:
+        self.moditem(c, lambda ic: ic + 1)
+    wantedstr = localStorage.getItem('wanted')
+    if wantedstr is not None:
+      console.log('wantedstr', wantedstr)
+      self.wanted = set(wantedstr.split(','))
+    else:
+      self.wanted = set()
     self.ready = False
 
   def setready(self):
     self.ready = True
+    self.render()
 
   def clearitems(self):
     if not self.ready:
@@ -115,7 +126,12 @@ class TI(object):
 
   def renderitems(self):
     result = []
-    for iidx in list(self.itemstostr()):
+    itemstr = self.itemstostr()
+    if len(itemstr) > 0:
+      localStorage.setItem('items', itemstr)
+    else:
+      localStorage.removeItem('items')
+    for iidx in list(itemstr):
       result.append('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem({2})">'.format(iidx, baseitem[int(iidx)], iidx))
     sih('items', ''.join(result))
 
@@ -208,6 +224,10 @@ class TI(object):
 
   # __pragma__('kwargs')
   def renderwanted(self):
+    if len(self.wanted) > 0:
+      localStorage.setItem('wanted', ','.join(self.wanted))
+    else:
+      localStorage.removeItem('wanted')
     result = []
     for c in self.wanted:
       if c[0] == c[1]:
@@ -219,9 +239,9 @@ class TI(object):
         c2buildable = self.items.get(int(c[1]), 0) > 0
         buildable = c1buildable and c2buildable
       result.append(self.rendercomponentstr(c[0], c[1], 'w',
-        minitclass = 'showdel' if not c1buildable else '',
-        minibclass = 'showdel' if not c2buildable else '',
-        imgclass = 'showdel' if not buildable else '',
+        minitclass = 'showunbuildable' if not c1buildable else '',
+        minibclass = 'showunbuildable' if not c2buildable else '',
+        imgclass = 'showunbuildable' if not buildable else '',
         imgextra = "onclick='ti.ti.delwanted(\"{0}\")'".format(c)
       ))
     sih('wanted', ''.join(result))
