@@ -58,21 +58,70 @@ def sih(k, v):
   document.getElementById(k).innerHTML = v
 
 
-class TI(object):
+class UIPrefs(object):
+  themes = ('Dark', 'Light')
+  iconsizes = (('Medium', '0.75'), ('Large', '1.0'), ('Small', '0.5'))
+
   def __init__(self):
+    self.iconsize = 0
+    try:
+      iconsizestr = localStorage.getItem('iconsize')
+      if iconsizestr is not None:
+        iconsznum = max(0, int(iconsizestr)) % len(self.iconsizes)
+        self.seticonsize(iconsznum)
+    except:
+      pass
+    self.theme = 0
+    try:
+      themestr = localStorage.getItem('theme')
+      if themestr is not None:
+        themenum = max(0, int(themestr)) % len(self.themes)
+        self.settheme(themenum)
+    except:
+      pass
+
+  def toggleiconsize(self):
+    iconsznum = (self.iconsize + 1) % len(self.iconsizes)
+    self.seticonsize(iconsznum)
+
+  def seticonsize(self, iconsznum):
+    self.iconsize = iconsznum
+    sizename,scale = self.iconsizes[iconsznum]
+    document.documentElement.style.setProperty('--icon-scale', scale)
+    localStorage.setItem('iconsize', str(iconsznum))
+    sih('iconsize', sizename)
+
+
+  def toggletheme(self):
+    themenum = (self.theme + 1) % len(self.themes)
+    self.settheme(themenum)
+
+  def settheme(self, themenum):
+    themename = self.themes[themenum]
+    self.theme = themenum
+    document.documentElement.setAttribute('data-theme', themename.lower())
+    sih('theme', themename)
+    localStorage.setItem('theme', str(themenum))
+
+
+
+class TI(object):
+
+  def __init__(self):
+    self.ui = UIPrefs()
     self.items = {}
     itemstr = localStorage.getItem('items')
     if itemstr is not None:
-      console.log('itemstr', itemstr)
       for c in itemstr:
         self.moditem(c, lambda ic: ic + 1)
     wantedstr = localStorage.getItem('wanted')
     if wantedstr is not None:
-      console.log('wantedstr', wantedstr)
       self.wanted = set(wantedstr.split(','))
     else:
       self.wanted = set()
     self.ready = False
+
+
 
   def setready(self):
     self.ready = True
@@ -170,7 +219,7 @@ class TI(object):
         result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
           imgclass = 'lowscore' if thisitem.score < 3 else ''))
       if spare is not None:
-        result.append('<img src="img/{0}.png" class="spare" title="{1}">'.format(spare, baseitem[int(spare)]))
+        result.append('<div class="spare"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.values())
     sih('combinations', ''.join(result))
