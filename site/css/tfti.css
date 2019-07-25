@@ -12,6 +12,9 @@
   --delfilter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
   --unbuildablefilter: sepia(100%) saturate(300%) brightness(90%) hue-rotate(290deg) sepia(40%) saturate(80%);
 
+  --balloon-color: #335;
+  --balloon-font-size: 16px;
+
   --background-color: #000;
   --border-color: #557;
   --header-color: #cacaf0;
@@ -91,12 +94,7 @@ div.combinationscontainer {
   padding: var(--pad-size);
   width: calc(var(--col-size) + var(--pad-size));
 }
-div.tip {
-  height: 1.2em;
-  font-size: 1.2em;
-  color: var(--header-color);
-  width: 100%;
-}
+
 div.combogrid {
   display: grid;
   align-content: center;

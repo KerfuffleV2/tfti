@@ -4,7 +4,16 @@
 document = console = ITEMS = __pragma__ = localStorage = object()
 # __pragma__('noskip')
 
-baseitem = ('sword', 'bow', 'rod', 'tear', 'armor', 'cloak', 'belt', 'spatula')
+baseitem = (
+  'B.F. Sword: +20 attack damage',
+  'Recurve Bow: +20% attack speed',
+  'Needlessly Large Rod: +20% spell damage',
+  'Tear of the Goddess: +20 starting mana',
+  'Chain Vest: +20 armor',
+  'Negatron Cloak: +20 magic resist',
+  "Giant's belt: +200 health",
+  'Spatula',
+  )
 
 itemsj = ITEMS
 
@@ -156,7 +165,6 @@ class TI(object):
     decf = lambda ic: max(0, ic - 1)
     self.moditem(c[0], decf)
     self.moditem(c[1], decf)
-    self.tipout('b')
     self.render()
 
   def itemstostr(self):
@@ -181,7 +189,11 @@ class TI(object):
     else:
       localStorage.removeItem('items')
     for iidx in list(itemstr):
-      result.append('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem({2})">'.format(iidx, baseitem[int(iidx)], iidx))
+      result.append("""
+      <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">
+        <img src="img/{0}.png" class="del" onclick="ti.ti.decitem({2})">
+      </div>
+      """.format(iidx, baseitem[int(iidx)], iidx))
     sih('items', ''.join(result))
 
   # __pragma__('kwargs')
@@ -219,7 +231,7 @@ class TI(object):
         result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
           imgclass = 'lowscore' if thisitem.score < 3 else ''))
       if spare is not None:
-        result.append('<div class="spare"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
+        result.append('<div class="spare" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.values())
     sih('combinations', ''.join(result))
@@ -239,26 +251,6 @@ class TI(object):
     for item in sitems:
       result.append('<option value="{0}">{1}</option>'.format(item.combine, item.name))
     sih('wantedselect', ''.join(result))
-
-  def tipout(self, typ):
-    if typ == 'b':
-      did = 'buildabletip'
-    elif typ == 'c':
-      did = 'combinestip'
-    else:
-      return
-    sih(did, '')
-
-  def tip(self, typ, c):
-    if typ == 'b':
-      did = 'buildabletip'
-    elif typ == 'c':
-      did = 'combinestip'
-    else:
-      return
-    item = items.bycombine[c]
-    itemtitle = '{0}: {1}'.format(item.name, item.text)
-    sih(did, itemtitle)
 
   def setwanted(self, thisarg):
     if len(self.wanted) >= 16:
@@ -302,12 +294,10 @@ class TI(object):
     itemtitle = '{0}: {1}'.format(item.name, item.text)
     return '''
       <div class="component">
-        <div class="minit"><img src="img/{c1}.png" title="{c1name}" class="minit {minitclass}"></div>
-        <div class="minib"><img src="img/{c2}.png" title="{c2name}" class="minib {minibclass}"></div>
-        <div class="combitem">
-          <img src="img/{c1}{c2}.png" title="{itemtitle}" class="component {imgclass}"
-               onmouseover='ti.ti.tip("{typ}", "{c1}{c2}")'
-               onmouseout='ti.ti.tipout("{typ}")' {imgextra}>
+        <div class="minit" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}"><img src="img/{c1}.png" class="minit {minitclass}"></div>
+        <div class="minib" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}"><img src="img/{c2}.png" class="minib {minibclass}"></div>
+        <div class="combitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">
+          <img src="img/{c1}{c2}.png" class="component {imgclass}" {imgextra}>
         </div>
       </div>'''.format(c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name,
                        itemtitle = itemtitle, typ = typ,
@@ -318,7 +308,11 @@ class TI(object):
   def mkbuttons(self):
     result = []
     for iidx in range(8):
-      result.append('<img src="img/{0}.png" class="add" title="{1}" onclick="ti.ti.incitem(\'{2}\')">'.format(iidx, baseitem[iidx], iidx))
+      result.append("""
+        <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">
+          <img src="img/{0}.png" class="add" onclick="ti.ti.incitem('{2}')">
+        </div>
+        """.format(iidx, baseitem[iidx], iidx))
     result.append('<br>')
     sih('baseitems', ''.join(result))
 
