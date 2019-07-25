@@ -16,17 +16,17 @@
     <link rel="stylesheet" type="text/css" href="./css/tfti.css" media="all">
   </head>
   <body>
-    <div class="header">Shop:</div>
+    <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="Click component to add"><div class="header">Shop:</div></div>
     <div id="baseitems"></div>
     <hr>
     <div id="havewant">
-      <div>
-        <div class="header">
+      <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click component to remove, click ✗ to clear">
+        <div class="header" >
           Have:
           <div class="clearbutton" onclick="ti.ti.clearitems()" title="Clear items">✗</div>
         </div>
       </div>
-      <div>
+      <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Select item to watch, click watched item to remove">
         <div class="header">
           Want:
           <select class="cselect" id="wantedselect" onchange="ti.ti.setwanted(this)">
@@ -39,11 +39,15 @@
       <div id="wanted"></div>
     </div>
     <hr>
-    <div class="header">Buildable:</div>
+    <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click buildable item to remove its components">
+      <div class="header">Buildable:</div>
+    </div>
     <div id="buildable"></div>
     <br class="clear">
     <hr>
-    <div class="header">Combinations:</div>
+    <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="No actions currently">
+      <div class="header">Combinations:</div>
+    </div>
     <div id="combinations" class="combogrid"></div>
     <br class="clear">
     <hr>
