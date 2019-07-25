@@ -264,10 +264,12 @@ class TI(object):
     self.wanted.add(thisarg.value)
     thisarg.value = ''
     self.renderwanted()
+    self.fixtooltips()
 
   def delwanted(self, c):
     self.wanted.remove(c)
     self.renderwanted()
+    self.fixtooltips()
 
   # __pragma__('kwargs')
   def renderwanted(self):
