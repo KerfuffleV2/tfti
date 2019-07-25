@@ -1,7 +1,7 @@
 # Note that there's a lot of dumb/unidiomatic code here to work around Transcrypt weirdness.
 
 # __pragma__ ('skip')
-document = console = ITEMS = __pragma__ = localStorage = object()
+document = console = ITEMS = __pragma__ = localStorage = requestAnimationFrame = object()
 # __pragma__('noskip')
 
 baseitem = (
@@ -177,9 +177,13 @@ class TI(object):
     return ''.join(result)
 
   def render(self):
-    self.renderitems()
-    self.rendercombinations()
-    self.renderwanted()
+    def go():
+      self.renderitems()
+      self.rendercombinations()
+      self.renderwanted()
+      requestAnimationFrame(self.fixtooltips)
+    requestAnimationFrame(go)
+
 
   def renderitems(self):
     result = []
@@ -190,8 +194,10 @@ class TI(object):
       localStorage.removeItem('items')
     for iidx in list(itemstr):
       result.append("""
-      <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">
-        <img src="img/{0}.png" class="del" onclick="ti.ti.decitem({2})">
+      <div>
+        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">
+          <img src="img/{0}.png" class="del" onclick="ti.ti.decitem({2})">
+        </div>
       </div>
       """.format(iidx, baseitem[int(iidx)], iidx))
     sih('items', ''.join(result))
@@ -231,7 +237,7 @@ class TI(object):
         result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
           imgclass = 'lowscore' if thisitem.score < 3 else ''))
       if spare is not None:
-        result.append('<div class="spare" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
+        result.append('<div class="spare fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.values())
     sih('combinations', ''.join(result))
@@ -294,9 +300,9 @@ class TI(object):
     itemtitle = '{0}: {1}'.format(item.name, item.text)
     return '''
       <div class="component">
-        <div class="minit" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}"><img src="img/{c1}.png" class="minit {minitclass}"></div>
-        <div class="minib" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}"><img src="img/{c2}.png" class="minib {minibclass}"></div>
-        <div class="combitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">
+        <div class="minit fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}"><img src="img/{c1}.png" class="minit {minitclass}"></div>
+        <div class="minib fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}"><img src="img/{c2}.png" class="minib {minibclass}"></div>
+        <div class="combitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">
           <img src="img/{c1}{c2}.png" class="component {imgclass}" {imgextra}>
         </div>
       </div>'''.format(c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name,
@@ -305,11 +311,23 @@ class TI(object):
                        imgclass = imgclass, imgextra = imgextra)
   # __pragma__('nokwargs')
 
+  def fixtooltips(self):
+    width = window.innerWidth
+    tofix = []
+    for ttdiv in document.querySelectorAll('div.fixtip[data-balloon-pos="up-left"]'):
+      divrect = ttdiv.parentElement.getBoundingClientRect();
+      if divrect.x + (divrect.width * 3) >= width:
+        tofix.append(ttdiv)
+    def runfix():
+      for ttdiv in tofix:
+        ttdiv.setAttribute('data-balloon-pos', 'up-right')
+    requestAnimationFrame(runfix)
+
   def mkbuttons(self):
     result = []
     for iidx in range(8):
       result.append("""
-        <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">
+        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">
           <img src="img/{0}.png" class="add" onclick="ti.ti.incitem('{2}')">
         </div>
         """.format(iidx, baseitem[iidx], iidx))
