@@ -1,7 +1,7 @@
-// Transcrypt'ed from Python, 2019-07-24 07:54:23
+// Transcrypt'ed from Python, 2019-07-25 01:34:29
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
-export var baseitem = tuple (['sword', 'bow', 'rod', 'tear', 'armor', 'cloak', 'belt', 'spatula']);
+export var baseitem = tuple (['B.F. Sword: +20 attack damage', 'Recurve Bow: +20% attack speed', 'Needlessly Large Rod: +20% spell damage', 'Tear of the Goddess: +20 starting mana', 'Chain Vest: +20 armor', 'Negatron Cloak: +20 magic resist', "Giant's belt: +200 health", 'Spatula']);
 export var itemsj = ITEMS;
 export var Item =  __class__ ('Item', [object], {
 	__module__: __name__,
@@ -73,7 +73,6 @@ export var UIPrefs =  __class__ ('UIPrefs', [object], {
 			var iconsizestr = localStorage.getItem ('iconsize');
 			if (iconsizestr !== null) {
 				var iconsznum = __mod__ (max (0, int (iconsizestr)), len (self.iconsizes));
-				console.log ('iconsize', iconsizestr, iconsznum);
 				self.seticonsize (iconsznum);
 			}
 		}
@@ -86,7 +85,6 @@ export var UIPrefs =  __class__ ('UIPrefs', [object], {
 			if (themestr !== null) {
 				var themenum = __mod__ (max (0, int (themestr)), len (self.themes));
 				self.settheme (themenum);
-				console.log ('theme', themestr, themenum);
 			}
 		}
 		catch (__except0__) {
@@ -183,7 +181,6 @@ export var TI =  __class__ ('TI', [object], {
 		});
 		self.moditem (c [0], decf);
 		self.moditem (c [1], decf);
-		self.tipout ('b');
 		self.render ();
 	}, 'decfullitem');},
 	get itemstostr () {return __get__ (this, function (self) {
@@ -213,7 +210,7 @@ export var TI =  __class__ ('TI', [object], {
 			localStorage.removeItem ('items');
 		}
 		for (var iidx of list (itemstr)) {
-			result.append ('<img src="img/{0}.png" class="del" title="{1}" onclick="ti.ti.decitem({2})">'.format (iidx, baseitem [int (iidx)], iidx));
+			result.append ('\n      <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">\n        <img src="img/{0}.png" class="del" onclick="ti.ti.decitem({2})">\n      </div>\n      '.format (iidx, baseitem [int (iidx)], iidx));
 		}
 		sih ('items', ''.join (result));
 	}, 'renderitems');},
@@ -312,7 +309,7 @@ export var TI =  __class__ ('TI', [object], {
 				result.append (self.rendercomponentstr (thisitem.combine [0], thisitem.combine [1], 'c', __kwargtrans__ ({imgclass: (thisitem.score < 3 ? 'lowscore' : '')})));
 			}
 			if (spare !== null) {
-				result.append ('<div class="spare"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format (spare, baseitem [int (spare)]));
+				result.append ('<div class="spare" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format (spare, baseitem [int (spare)]));
 			}
 			result.append ('</div>');
 		}
@@ -366,32 +363,6 @@ export var TI =  __class__ ('TI', [object], {
 		}
 		sih ('wantedselect', ''.join (result));
 	}, 'mkwantedoptions');},
-	get tipout () {return __get__ (this, function (self, typ) {
-		if (typ == 'b') {
-			var did = 'buildabletip';
-		}
-		else if (typ == 'c') {
-			var did = 'combinestip';
-		}
-		else {
-			return ;
-		}
-		sih (did, '');
-	}, 'tipout');},
-	get tip () {return __get__ (this, function (self, typ, c) {
-		if (typ == 'b') {
-			var did = 'buildabletip';
-		}
-		else if (typ == 'c') {
-			var did = 'combinestip';
-		}
-		else {
-			return ;
-		}
-		var item = py_items.bycombine [c];
-		var itemtitle = '{0}: {1}'.format (item.py_name, item.text);
-		sih (did, itemtitle);
-	}, 'tip');},
 	get setwanted () {return __get__ (this, function (self, thisarg) {
 		if (len (self.wanted) >= 16) {
 			return ;
@@ -479,12 +450,12 @@ export var TI =  __class__ ('TI', [object], {
 		var c2name = baseitem [int (c2)];
 		var item = py_items.bycombine [''.join (tuple ([c1, c2]))];
 		var itemtitle = '{0}: {1}'.format (item.py_name, item.text);
-		return '\n      <div class="component">\n        <div class="minit"><img src="img/{c1}.png" title="{c1name}" class="minit {minitclass}"></div>\n        <div class="minib"><img src="img/{c2}.png" title="{c2name}" class="minib {minibclass}"></div>\n        <div class="combitem">\n          <img src="img/{c1}{c2}.png" title="{itemtitle}" class="component {imgclass}"\n               onmouseover=\'ti.ti.tip("{typ}", "{c1}{c2}")\'\n               onmouseout=\'ti.ti.tipout("{typ}")\' {imgextra}>\n        </div>\n      </div>'.format (__kwargtrans__ ({c1: c1, c2: c2, c1name: c1name, c2name: c2name, itemtitle: itemtitle, typ: typ, minibclass: minibclass, minitclass: minitclass, imgclass: imgclass, imgextra: imgextra}));
+		return '\n      <div class="component">\n        <div class="minit" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}"><img src="img/{c1}.png" class="minit {minitclass}"></div>\n        <div class="minib" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}"><img src="img/{c2}.png" class="minib {minibclass}"></div>\n        <div class="combitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">\n          <img src="img/{c1}{c2}.png" class="component {imgclass}" {imgextra}>\n        </div>\n      </div>'.format (__kwargtrans__ ({c1: c1, c2: c2, c1name: c1name, c2name: c2name, itemtitle: itemtitle, typ: typ, minibclass: minibclass, minitclass: minitclass, imgclass: imgclass, imgextra: imgextra}));
 	}, 'rendercomponentstr');},
 	get mkbuttons () {return __get__ (this, function (self) {
 		var result = [];
 		for (var iidx = 0; iidx < 8; iidx++) {
-			result.append ('<img src="img/{0}.png" class="add" title="{1}" onclick="ti.ti.incitem(\'{2}\')">'.format (iidx, baseitem [iidx], iidx));
+			result.append ('\n        <div class="baseitem" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">\n          <img src="img/{0}.png" class="add" onclick="ti.ti.incitem(\'{2}\')">\n        </div>\n        '.format (iidx, baseitem [iidx], iidx));
 		}
 		result.append ('<br>');
 		sih ('baseitems', ''.join (result));
