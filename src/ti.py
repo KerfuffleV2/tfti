@@ -352,7 +352,7 @@ class TI(object):
       result.append(self.rendercomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
-        imgclass = 'showunbuildable lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildable'
+        imgclass = 'showunbuildablefonly lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildablefonly'
       ))
     sih('oneoff', ''.join(result))
 

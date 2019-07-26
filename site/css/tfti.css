@@ -56,6 +56,9 @@ div.clearbutton {
 
 img.del:hover { filter: var(--delfilter); }
 img.add:hover { filter: var(--addfilter); }
+img.showunbuildablefonly {
+  filter: var(--unbuildablefilter);
+}
 img.showunbuildable {
   filter: var(--unbuildablefilter);
   outline: var(--unbuildable-outline);
