@@ -41,7 +41,6 @@ div.header {
   color: var(--header-color);
   font-size: 1.8em;
   font-variant: small-caps;
-  width: 100%;
   padding-bottom: 6px;
 }
 div.clearbutton {

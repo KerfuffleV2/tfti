@@ -4,7 +4,7 @@
 document = console = ITEMS = __pragma__ = localStorage = requestAnimationFrame = object()
 # __pragma__('noskip')
 
-baseitem = (
+COMPONENT = (
   'B.F. Sword: +20 attack damage',
   'Recurve Bow: +20% attack speed',
   'Needlessly Large Rod: +20% spell damage',
@@ -100,7 +100,6 @@ class UIPrefs(object):
     localStorage.setItem('iconsize', str(iconsznum))
     sih('iconsize', sizename)
 
-
   def toggletheme(self):
     themenum = (self.theme + 1) % len(self.themes)
     self.settheme(themenum)
@@ -113,24 +112,48 @@ class UIPrefs(object):
     localStorage.setItem('theme', str(themenum))
 
 
+class Components(object):
+  def __init__(self):
+    self.components = {}
+    compstr = localStorage.getItem('items')
+    if compstr is not None:
+      for cid in compstr:
+        self.modify(cid, 1)
+
+  def get(self, cid):
+    return self.components.get(cid, 0)
+
+  def clear(self):
+    self.components = {}
+
+  def modify(self, cid, amt):
+    cid = int(cid)
+    componentcount = self.get(cid)
+    self.components[cid] = max(0, componentcount + amt)
+
+  def values(self):
+    return self.components.values()
+
+  def __str__(self):
+    result = []
+    for cid in range(8):
+      count = self.get(cid)
+      if count > 0:
+        for _ in range(count):
+          result.append(str(cid))
+    return ''.join(result)
+
 
 class TI(object):
-
   def __init__(self):
-    self.ui = UIPrefs()
-    self.items = {}
-    itemstr = localStorage.getItem('items')
-    if itemstr is not None:
-      for c in itemstr:
-        self.moditem(c, lambda ic: ic + 1)
+    self.uipref = UIPrefs()
+    self.components = Components()
     wantedstr = localStorage.getItem('wanted')
     if wantedstr is not None:
       self.wanted = set(wantedstr.split(','))
     else:
       self.wanted = set()
     self.ready = False
-
-
 
   def setready(self):
     self.ready = True
@@ -139,80 +162,66 @@ class TI(object):
   def clearitems(self):
     if not self.ready:
       return
-    self.items = {}
+    self.components.clear()
     self.render()
 
-  def moditem(self, i, l):
-    i = int(i)
-    itemcount = self.items.get(i, 0)
-    self.items[i] = l(itemcount)
-
-  def incitem(self, i):
-    if not self.ready or sum(self.items.values()) > 7:
+  def inccomp(self, cid):
+    if not self.ready or sum(self.components.values()) > 7:
       return
-    self.moditem(i, lambda ic: ic + 1)
+    self.components.modify(cid, 1)
     self.render()
 
-  def decitem(self, i):
+  def deccomp(self, cid):
     if not self.ready:
       return
-    self.moditem(i, lambda ic: max(0, ic - 1))
+    self.components.modify(cid, -1)
     self.render()
 
-  def decfullitem(self, c):
+  def decitem(self, fi):
     if not self.ready:
       return
-    decf = lambda ic: max(0, ic - 1)
-    self.moditem(c[0], decf)
-    self.moditem(c[1], decf)
+    self.components.modify(fi[0], -1)
+    self.components.modify(fi[1], -1)
     self.render()
 
-  def itemstostr(self):
-    result = []
-    for k in range(8):
-      count = self.items.get(k, 0)
-      if count > 0:
-        for _ in range(count):
-          result.append(str(k))
-    return ''.join(result)
 
   def render(self):
     def go():
-      self.renderitems()
+      self.rendercomponents()
       self.rendercombinations()
       self.renderwanted()
       requestAnimationFrame(self.fixtooltips)
     requestAnimationFrame(go)
 
 
-  def renderitems(self):
+  def rendercomponents(self):
     result = []
-    itemstr = self.itemstostr()
-    if len(itemstr) > 0:
-      localStorage.setItem('items', itemstr)
+    componentstr = str(self.components)
+    if len(componentstr) > 0:
+      localStorage.setItem('items', componentstr)
     else:
       localStorage.removeItem('items')
-    for iidx in list(itemstr):
+    for cid in list(componentstr):
       result.append("""
       <div>
         <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">
-          <img src="img/{0}.png" class="del" onclick="ti.ti.decitem({2})">
+          <img src="img/{0}.png" class="del" onclick="ti.ti.deccomp({2})">
         </div>
       </div>
-      """.format(iidx, baseitem[int(iidx)], iidx))
+      """.format(cid, COMPONENT[int(cid)], cid))
     sih('items', ''.join(result))
 
   # __pragma__('kwargs')
   def rendercombinations(self):
     result = []
-    itemstr = self.itemstostr()
-    if len(itemstr) < 2:
+    componentstr = str(self.components)
+    if len(componentstr) < 2:
       sih('combinations', '')
       sih('buildable', '')
       return
-    if len(itemstr) & 1:
-      itemstr = itemstr + ' '
-    up = uniquepairs(tuple(itemstr))
+    if len(componentstr) & 1:
+      componentstr = componentstr + ' '
+    up = uniquepairs(tuple(componentstr))
     uniqueitems = {}
     seen = set()
     newup = []
@@ -246,7 +255,7 @@ class TI(object):
     result = []
     for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
       c = item.combine
-      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decfullitem('{0}')\"".format(c),
+      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
         imgclass = 'lowscore' if item.score < 3 else ''))
     sih('buildable', ''.join(result))
   # __pragma__('nokwargs')
@@ -280,12 +289,12 @@ class TI(object):
     result = []
     for c in self.wanted:
       if c[0] == c[1]:
-        havec = self.items.get(int(c[0]), 0)
+        havec = self.components.get(int(c[0]))
         c1buildable = havec > 0
         c2buildable = buildable = havec > 1
       else:
-        c1buildable = self.items.get(int(c[0]), 0) > 0
-        c2buildable = self.items.get(int(c[1]), 0) > 0
+        c1buildable = self.components.get(int(c[0])) > 0
+        c2buildable = self.components.get(int(c[1])) > 0
         buildable = c1buildable and c2buildable
       result.append(self.rendercomponentstr(c[0], c[1], 'w',
         minitclass = 'showunbuildable' if not c1buildable else '',
@@ -296,8 +305,8 @@ class TI(object):
     sih('wanted', ''.join(result))
 
   def rendercomponentstr(self, c1, c2, typ, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
-    c1name = baseitem[int(c1)]
-    c2name = baseitem[int(c2)]
+    c1name = COMPONENT[int(c1)]
+    c2name = COMPONENT[int(c2)]
     item = items.bycombine[''.join((c1,c2))]
     itemtitle = '{0}: {1}'.format(item.name, item.text)
     return '''
@@ -327,12 +336,12 @@ class TI(object):
 
   def mkbuttons(self):
     result = []
-    for iidx in range(8):
+    for cid in range(8):
       result.append("""
         <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">
-          <img src="img/{0}.png" class="add" onclick="ti.ti.incitem('{2}')">
+          <img src="img/{0}.png" class="add" onclick="ti.ti.inccomp('{2}')">
         </div>
-        """.format(iidx, baseitem[iidx], iidx))
+        """.format(cid, COMPONENT[cid], cid))
     result.append('<br>')
     sih('baseitems', ''.join(result))
 
