@@ -7,6 +7,45 @@
     <meta name="description" content="Teamfight Tactics item combination helper">
     <meta name="author" content="Kerfuffle">
     <script type="text/javascript" src="./js/items.js"></script>
+
+    <script type="text/tfti-template" id="template-shop">
+      <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{text}">
+        <img src="img/{cid}.png" class="add" onclick="ti.ti.inccomp('{cid}')">
+      </div>
+    </script>
+
+    <script type="text/tfti-template" id="template-owned-components">
+      <div>
+        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{text}">
+          <img src="img/{cid}.png" class="del" onclick="ti.ti.deccomp({cid})">
+        </div>
+      </div>
+    </script>
+
+    <script type="text/tfti-template" id="template-wanted-option">
+      <option value="{combine}">{itemname}</option>
+    </script>
+
+    <script type="text/tfti-template" id="template-spare">
+      <div class="spare fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{text}">
+        <img src="img/{sparecid}.png" class="spare" title="{text}">
+      </div>
+    </script>
+
+    <script type="text/tfti-template" id="template-item-with-components">
+      <div class="component">
+        <div class="minit fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}">
+          <img src="img/{cid1}.png" class="minit {minitclass}">
+        </div>
+        <div class="minib fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}">
+          <img src="img/{cid2}.png" class="minib {minibclass}">
+        </div>
+        <div class="combitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">
+          <img src="img/{cid1}{cid2}.png" class="component {imgclass}" {imgextra}>
+        </div>
+      </div>
+    </script>
+
     <script type="module">
       import * as ti from "./js/ti.js";
       window.ti = ti;
@@ -43,6 +82,14 @@
       <div class="header">Buildable:</div>
     </div>
     <div id="buildable"></div>
+    <div id="oneoffcontainer">
+      <br class="clear">
+      <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building">
+        <div class="header">One-off:</div>
+      </div>
+      <div id="oneoff"></div>
+      <br class="clear">
+    </div>
     <hr>
     <div data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="No actions currently">
       <div class="header">Combinations:</div>
@@ -55,10 +102,10 @@
         <li class="footeritem">by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></li>
         <li class="footeritem"><a href="https://github.com/KerfuffleV2/tfti#readme">Help</a></li>
         <li class="footeritem">
-          Icon size: <div id="iconsize" onclick="ti.ti.ui.toggleiconsize()">Medium</a>
+          Icon size: <div id="iconsize" onclick="ti.ti.uipref.toggleiconsize()">Medium</a>
         </li>
         <li class="footeritem">
-          Theme: <div id="theme" onclick="ti.ti.ui.toggletheme()">Dark</a>
+          Theme: <div id="theme" onclick="ti.ti.uipref.toggletheme()">Dark</a>
         </li>
     </ul>
   </body>
