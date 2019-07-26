@@ -159,11 +159,29 @@ class Components(object):
           result.append(str(cid))
     return ''.join(result)
 
+class Templates(object):
+  def __init__(self):
+    self.templates = {}
+
+  def get(self, k):
+    k = 'template-' + k
+    tmpl = self.templates.get(k, None)
+    if tmpl is None:
+      newtmpl = document.getElementById(k)
+      if hasattr(newtmpl, 'innerHTML'):
+        tmpl = (newtmpl.innerHTML,)
+      else:
+        tmpl = (None,)
+    if tmpl[0] is None:
+      return '!!TEMPLATE MISSING!!'
+    return tmpl[0]
+
 
 class TI(object):
   def __init__(self):
     self.uipref = UIPrefs()
     self.components = Components()
+    self.template = Templates()
     wantedstr = localStorage.getItem('wanted')
     if wantedstr is not None:
       self.wanted = set(wantedstr.split(','))
@@ -210,64 +228,6 @@ class TI(object):
     requestAnimationFrame(go)
 
 
-  def rendercomponents(self):
-    result = []
-    componentstr = str(self.components)
-    if len(componentstr) > 0:
-      localStorage.setItem('items', componentstr)
-    else:
-      localStorage.removeItem('items')
-    for cid in list(componentstr):
-      result.append("""
-      <div>
-        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}">
-          <img src="img/{0}.png" class="del" onclick="ti.ti.deccomp({2})">
-        </div>
-      </div>
-      """.format(cid, COMPONENT[int(cid)], cid))
-    sih('items', ''.join(result))
-
-  # __pragma__('kwargs')
-  def rendercombinations(self):
-    result = []
-    componentstr = str(self.components)
-    if len(componentstr) < 2:
-      sih('combinations', '')
-      sih('buildable', '')
-      return
-    if len(componentstr) & 1:
-      componentstr = componentstr + ' '
-    up = mkcombinations(tuple(componentstr))
-    uniqueitems = {}
-    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
-      pi = sorted(pi, reverse = True, key = lambda i: i.score)
-      result.append('<div class="combinationscontainer">')
-      for thisitem in pi:
-        uniqueitems[thisitem.combine] = thisitem
-        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
-          imgclass = 'lowscore' if thisitem.score < 3 else ''))
-      if spare is not None:
-        result.append('<div class="spare fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, COMPONENT[int(spare)]))
-      result.append('</div>')
-    self.renderbuildable(uniqueitems.values())
-    sih('combinations', ''.join(result))
-
-  def renderbuildable(self, uniqueitems):
-    result = []
-    for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
-      c = item.combine
-      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
-        imgclass = 'lowscore' if item.score < 3 else ''))
-    sih('buildable', ''.join(result))
-  # __pragma__('nokwargs')
-
-  def mkwantedoptions(self):
-    sitems = sorted(items.bycombine.values(), key = lambda i: i.name)
-    result = ['<option></option>']
-    for item in sitems:
-      result.append('<option value="{0}">{1}</option>'.format(item.combine, item.name))
-    sih('wantedselect', ''.join(result))
-
   def setwanted(self, thisarg):
     if len(self.wanted) >= 16:
       return
@@ -282,6 +242,59 @@ class TI(object):
     self.fixtooltips()
 
   # __pragma__('kwargs')
+  def mkwantedoptions(self):
+    tmpl = self.template.get('wanted-option')
+    sitems = sorted(items.bycombine.values(), key = lambda i: i.name)
+    result = ['<option></option>']
+    for item in sitems:
+      result.append(tmpl.format(combine = item.combine, name = item.name))
+    sih('wantedselect', ''.join(result))
+
+  def rendercomponents(self):
+    result = []
+    componentstr = str(self.components)
+    if len(componentstr) > 0:
+      localStorage.setItem('items', componentstr)
+    else:
+      localStorage.removeItem('items')
+    tmpl = self.template.get('owned-components')
+    for cid in list(componentstr):
+      result.append(tmpl.format(cid = cid, text = COMPONENT[int(cid)]))
+    sih('items', ''.join(result))
+
+  def rendercombinations(self):
+    result = []
+    componentstr = str(self.components)
+    if len(componentstr) < 2:
+      sih('combinations', '')
+      sih('buildable', '')
+      return
+    tmpl = self.template.get('spare')
+    if len(componentstr) & 1:
+      componentstr = componentstr + ' '
+    up = mkcombinations(tuple(componentstr))
+    uniqueitems = {}
+    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+      pi = sorted(pi, reverse = True, key = lambda i: i.score)
+      result.append('<div class="combinationscontainer">')
+      for thisitem in pi:
+        uniqueitems[thisitem.combine] = thisitem
+        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
+          imgclass = 'lowscore' if thisitem.score < 3 else ''))
+      if spare is not None:
+        result.append(tmpl.format(sparecid = spare, text = COMPONENT[int(spare)]))
+      result.append('</div>')
+    self.renderbuildable(uniqueitems.values())
+    sih('combinations', ''.join(result))
+
+  def renderbuildable(self, uniqueitems):
+    result = []
+    for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
+      c = item.combine
+      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
+        imgclass = 'lowscore' if item.score < 3 else ''))
+    sih('buildable', ''.join(result))
+
   def renderwanted(self):
     if len(self.wanted) > 0:
       localStorage.setItem('wanted', ','.join(self.wanted))
@@ -310,18 +323,21 @@ class TI(object):
     c2name = COMPONENT[int(c2)]
     item = items.bycombine[''.join((c1,c2))]
     itemtitle = '{0}: {1}'.format(item.name, item.text)
-    return '''
-      <div class="component">
-        <div class="minit fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c1name}"><img src="img/{c1}.png" class="minit {minitclass}"></div>
-        <div class="minib fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{c2name}"><img src="img/{c2}.png" class="minib {minibclass}"></div>
-        <div class="combitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{itemtitle}">
-          <img src="img/{c1}{c2}.png" class="component {imgclass}" {imgextra}>
-        </div>
-      </div>'''.format(c1 = c1, c2 = c2,  c1name = c1name, c2name = c2name,
-                       itemtitle = itemtitle, typ = typ,
-                       minibclass = minibclass, minitclass = minitclass,
-                       imgclass = imgclass, imgextra = imgextra)
+    return self.template.get('item-with-components').format(
+      cid1 = c1, cid2 = c2, c1name = c1name, c2name = c2name,
+      itemtitle = itemtitle, typ = typ,
+      minibclass = minibclass, minitclass = minitclass,
+      imgclass = imgclass, imgextra = imgextra)
+
+  def rendershop(self):
+    result = []
+    tmpl = self.template.get('shop')
+    for cid in range(8):
+      result.append(tmpl.format(cid = cid, text = COMPONENT[cid]))
+    result.append('<br>')
+    sih('baseitems', ''.join(result))
   # __pragma__('nokwargs')
+
 
   def fixtooltips(self):
     width = window.innerWidth
@@ -334,17 +350,6 @@ class TI(object):
       for ttdiv in tofix:
         ttdiv.setAttribute('data-balloon-pos', 'up-right')
     requestAnimationFrame(go)
-
-  def rendershop(self):
-    result = []
-    for cid in range(8):
-      result.append("""
-        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="{1}">
-          <img src="img/{0}.png" class="add" onclick="ti.ti.inccomp('{2}')">
-        </div>
-        """.format(cid, COMPONENT[cid], cid))
-    result.append('<br>')
-    sih('baseitems', ''.join(result))
 
 items = Items()
 ti = TI()
