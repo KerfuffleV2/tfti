@@ -270,6 +270,7 @@ class TI(object):
     if len(componentstr) < 2:
       sih('combinations', '')
       sih('buildable', '')
+      self.renderoneoff({})
       return
     tmpl = self.template.get('spare')
     if len(componentstr) & 1:
