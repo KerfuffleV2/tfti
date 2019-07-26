@@ -349,6 +349,9 @@ class TI(object):
     result = []
     for c1buildable, c2buildable, item in sorted(oneoff, reverse = True, key = lambda i: i[2].score):
       c = item.combine
+      if c2buildable:
+        c = (c[1], c[0])
+        c1buildable, c2buildable = (c2buildable, c1buildable)
       result.append(self.rendercomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
@@ -360,10 +363,11 @@ class TI(object):
   def rendercomponentstr(self, c1, c2, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
     c1name = COMPONENT[int(c1)]
     c2name = COMPONENT[int(c2)]
-    item = items.bycombine[''.join((c1,c2))]
+    ck = ''.join((c2, c1) if c1 > c2 else (c1, c2))
+    item = items.bycombine[ck]
     itemtitle = '{0}: {1}'.format(item.name, item.text)
     return self.template.get('item-with-components').format(
-      cid1 = c1, cid2 = c2, c1name = c1name, c2name = c2name,
+      cid1 = c1, cid2 = c2, combine = ck, c1name = c1name, c2name = c2name,
       itemtitle = itemtitle,
       minibclass = minibclass, minitclass = minitclass,
       imgclass = imgclass, imgextra = imgextra)
