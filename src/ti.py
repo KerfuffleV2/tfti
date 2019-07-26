@@ -24,6 +24,9 @@ class Item(object):
     self.name = itemj['name']
     self.score = itemj['score']
 
+  def __str__(self):
+    return '<Item combine={0} score={1} name=[{2}] text=[{3}]'.format(self.combine, self.score, self.name, self.text)
+
 class Items(object):
   def __init__(self):
     self.bycombine = {}
@@ -35,31 +38,36 @@ class Items(object):
 
 
 # Modified from https://stackoverflow.com/a/21762051
-def uniquepairs(l):
+def mkcombinations(l):
   result = []
-  def rec(l, choice, depth):
-    if depth > 10:
-      print('MAXDEPTH', depth)
-      return
+  seen = set()
+  def rec(l, choice):
     if len(l) == 0:
       tempresult = []
+      spare = None
       for i in choice:
-        tempresult.append(tuple(sorted(i)))
-      retval = tuple(sorted(tempresult))
-      if retval in result:
+        i = sorted(i)
+        if i[0] == ' ':
+          spare = i[1]
+          continue
+        tempresult.append(''.join(i))
+      tempresult.sort()
+      sk = ''.join(tempresult)
+      if sk in seen:
         return
-      result.append(retval)
+      retval = list(items.bycombine[k] for k in tempresult)
+      result.append((retval, spare))
     else:
       for j in range(1, len(l)):
         choice1 = choice[:]
-        choice1.append((l[0],l[j]))
+        choice1.append((l[0], l[j]))
         l1 = []
         for x in range(1, j):
           l1.append(l[x])
         for x in range(j + 1, len(l)):
           l1.append(l[x])
-        rec(l1, choice1, depth + 1)
-  rec(l, [], 0)
+        rec(l1, choice1)
+  rec(l, [])
   return result
 
 
@@ -221,32 +229,17 @@ class TI(object):
       return
     if len(componentstr) & 1:
       componentstr = componentstr + ' '
-    up = uniquepairs(tuple(componentstr))
+    up = mkcombinations(tuple(componentstr))
     uniqueitems = {}
-    seen = set()
-    newup = []
-    for p in up:
-      newp = []
-      spare = None
-      for i in p:
-        if i[0] == ' ':
-          spare = i[1]
-          continue
-        newp.append(items.bycombine[''.join(i)])
-      newup.append((newp, spare))
-    for (pi, spare) in sorted(newup, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
       pi = sorted(pi, reverse = True, key = lambda i: i.score)
-      sk = ''.join(sorted(list(i.combine for i in pi)))
-      if sk in seen:
-        continue
       result.append('<div class="combinationscontainer">')
-      seen.add(sk)
       for thisitem in pi:
         uniqueitems[thisitem.combine] = thisitem
         result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
           imgclass = 'lowscore' if thisitem.score < 3 else ''))
       if spare is not None:
-        result.append('<div class="spare fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, baseitem[int(spare)]))
+        result.append('<div class="spare fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{1}"><img src="img/{0}.png" class="spare" title="{1}"></div>'.format(spare, COMPONENT[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.values())
     sih('combinations', ''.join(result))
