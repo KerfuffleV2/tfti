@@ -247,7 +247,7 @@ class TI(object):
     sitems = sorted(items.bycombine.values(), key = lambda i: i.name)
     result = ['<option></option>']
     for item in sitems:
-      result.append(tmpl.format(combine = item.combine, name = item.name))
+      result.append(tmpl.format(combine = item.combine, itemname = item.name))
     sih('wantedselect', ''.join(result))
 
   def rendercomponents(self):
