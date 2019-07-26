@@ -41,12 +41,20 @@
 body { background-color: var(--background-color); color: var(--header-color); }
 hr { border: 4px solid var(--border-color); }
 
+div.headercontainer {
+  display: inline-block;
+}
+
 div.header {
+  display: inline-block;
   color: var(--header-color);
   font-size: 1.8em;
   font-variant: small-caps;
   padding-bottom: 6px;
+  cursor: help;
+
 }
+
 div.clearbutton {
   display: inline-block;
   font: inherit;
