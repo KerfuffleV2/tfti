@@ -1,0 +1,3 @@
+indent-string='  '
+[TYPECHECK]
+ignored-classes=AnyObj

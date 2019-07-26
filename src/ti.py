@@ -1,7 +1,15 @@
 # Note that there's a lot of dumb/unidiomatic code here to work around Transcrypt weirdness.
 
 # __pragma__ ('skip')
-document = console = ITEMS = __pragma__ = localStorage = requestAnimationFrame = object()
+class _AnyObj(object):
+  def __init__(self, *_, **_):
+    raise NotImplementedError()
+  def __iter__(self):
+    raise NotImplementedError()
+  def next(self):
+    raise NotImplementedError()
+
+document = console = ITEMS = requestAnimationFrame = __pragma__ = localStorage = _AnyObj()
 # __pragma__('noskip')
 
 COMPONENT = (
@@ -322,12 +330,12 @@ class TI(object):
       divrect = ttdiv.parentElement.getBoundingClientRect();
       if divrect.x + (divrect.width * 3) >= width:
         tofix.append(ttdiv)
-    def runfix():
+    def go():
       for ttdiv in tofix:
         ttdiv.setAttribute('data-balloon-pos', 'up-right')
-    requestAnimationFrame(runfix)
+    requestAnimationFrame(go)
 
-  def mkbuttons(self):
+  def rendershop(self):
     result = []
     for cid in range(8):
       result.append("""
@@ -340,5 +348,5 @@ class TI(object):
 
 items = Items()
 ti = TI()
-ti.mkbuttons()
+ti.rendershop()
 ti.mkwantedoptions()
