@@ -10,7 +10,7 @@
 
   --addfilter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(100deg);
   --delfilter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
-  --unbuildablefilter: sepia(100%) saturate(300%) brightness(90%) hue-rotate(290deg) sepia(40%) saturate(80%);
+  --unbuildablefilter: saturate(60%);
 
   --balloon-color: #335;
   --balloon-font-size: 16px;
@@ -21,6 +21,8 @@
   --link-color: #bbc;
   --dropdown-color: #cacaf0;
   --dropdown-background: #223;
+  --unbuildable-outline: 1px solid #f00;
+  --unbuildable-outline-offset: -1px;
 }
 
 [data-theme="light"] {
@@ -30,6 +32,8 @@
   --link-color: #007;
   --dropdown-color: #eaeaf0;
   --dropdown-background: var(--border-color);
+  --unbuildable-outline: 2px solid #f00;
+  --unbuildable-outline-offset: -2px;
 }
 
 * { box-sizing: border-box; }
@@ -52,7 +56,11 @@ div.clearbutton {
 
 img.del:hover { filter: var(--delfilter); }
 img.add:hover { filter: var(--addfilter); }
-img.showunbuildable { filter: var(--unbuildablefilter); }
+img.showunbuildable {
+  filter: var(--unbuildablefilter);
+  outline: var(--unbuildable-outline);
+  outline-offset: var(--unbuildable-outline-offset);
+}
 img.lowscore { opacity: 0.7; }
 div.spare {
   display: inline-block;
@@ -62,9 +70,9 @@ img { width: var(--item-size); height: var(--item-size); }
 img.spare { opacity: 0.6; }
 img.minit { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
 img.minib { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
-/* img.component { float: left; } */
 div.minit { grid-area: minit; }
 div.minib { grid-area: minib; }
+
 div.item { grid-area: item; }
 
 div.component {
@@ -109,7 +117,7 @@ div#havewant {
     "hitems  witems";
 }
 
-#baseitems, #items, #buildable, #wanted {
+#baseitems, #items, #buildable, #wanted, #oneoff {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
   grid-gap: var(--gap-size);
@@ -120,7 +128,7 @@ div#wanted {
   grid-gap: calc(var(--gap-size) * 0.66);
   grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
 }
-div#buildable {
+div#buildable, div#oneoff {
   grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
 }
 

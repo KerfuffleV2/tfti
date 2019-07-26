@@ -12,6 +12,8 @@ class _AnyObj(object):
 document = console = ITEMS = requestAnimationFrame = __pragma__ = localStorage = _AnyObj()
 # __pragma__('noskip')
 
+SCORE_THRESHOLD = 3
+
 COMPONENT = (
   'B.F. Sword: +20 attack damage',
   'Recurve Bow: +20% attack speed',
@@ -279,20 +281,21 @@ class TI(object):
       result.append('<div class="combinationscontainer">')
       for thisitem in pi:
         uniqueitems[thisitem.combine] = thisitem
-        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1], 'c',
-          imgclass = 'lowscore' if thisitem.score < 3 else ''))
+        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1],
+          imgclass = 'lowscore' if thisitem.score < SCORE_THRESHOLD else ''))
       if spare is not None:
         result.append(tmpl.format(sparecid = spare, text = COMPONENT[int(spare)]))
       result.append('</div>')
     self.renderbuildable(uniqueitems.values())
+    self.renderoneoff(uniqueitems)
     sih('combinations', ''.join(result))
 
   def renderbuildable(self, uniqueitems):
     result = []
     for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
       c = item.combine
-      result.append(self.rendercomponentstr(c[0], c[1], 'b', imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
-        imgclass = 'lowscore' if item.score < 3 else ''))
+      result.append(self.rendercomponentstr(c[0], c[1], imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
+        imgclass = 'lowscore' if item.score < SCORE_THRESHOLD else ''))
     sih('buildable', ''.join(result))
 
   def renderwanted(self):
@@ -310,7 +313,7 @@ class TI(object):
         c1buildable = self.components.get(int(c[0])) > 0
         c2buildable = self.components.get(int(c[1])) > 0
         buildable = c1buildable and c2buildable
-      result.append(self.rendercomponentstr(c[0], c[1], 'w',
+      result.append(self.rendercomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
         imgclass = 'showunbuildable' if not buildable else '',
@@ -318,14 +321,49 @@ class TI(object):
       ))
     sih('wanted', ''.join(result))
 
-  def rendercomponentstr(self, c1, c2, typ, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
+  def renderoneoff(self, uniqueitems):
+    oneoff = []
+    for cid1c in range(8):
+      havec1 = self.components.get(cid1c)
+      if havec1 != 1:
+        continue
+      for cid2c in range(8):
+        havec2 = self.components.get(cid2c)
+        cid1 = cid1c
+        cid2 = cid2c
+        currhavec1 = havec1
+        if cid1 > cid2:
+          cid1, cid2 = (cid2, cid1)
+          currhavec1, havec2 = (havec2, currhavec1)
+        ck = ''.join((str(cid1), str(cid2)))
+        if ck in uniqueitems:
+          continue
+        if cid1 == cid2:
+          c1buildable = True
+          c2buildable = False
+        else:
+          c1buildable = currhavec1 > 0
+          c2buildable = havec2 > 0
+        oneoff.append((c1buildable, c2buildable, items.bycombine[ck]))
+    result = []
+    for c1buildable, c2buildable, item in sorted(oneoff, reverse = True, key = lambda i: i[2].score):
+      c = item.combine
+      result.append(self.rendercomponentstr(c[0], c[1],
+        minitclass = 'showunbuildable' if not c1buildable else '',
+        minibclass = 'showunbuildable' if not c2buildable else '',
+        imgclass = 'showunbuildable lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildable'
+      ))
+    sih('oneoff', ''.join(result))
+
+
+  def rendercomponentstr(self, c1, c2, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
     c1name = COMPONENT[int(c1)]
     c2name = COMPONENT[int(c2)]
     item = items.bycombine[''.join((c1,c2))]
     itemtitle = '{0}: {1}'.format(item.name, item.text)
     return self.template.get('item-with-components').format(
       cid1 = c1, cid2 = c2, c1name = c1name, c2name = c2name,
-      itemtitle = itemtitle, typ = typ,
+      itemtitle = itemtitle,
       minibclass = minibclass, minitclass = minitclass,
       imgclass = imgclass, imgextra = imgextra)
 
