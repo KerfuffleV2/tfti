@@ -319,7 +319,7 @@ class TI(object):
     if len(self.components.tocomponentstr()) < 2:
       sih('combinations', '')
       sih('buildable', '')
-      self.renderoneoff({})
+      self.renderoneoff()
       return
     tmpl = self.template.get('spare')
     for (pi, spare) in self.components.combinations:
