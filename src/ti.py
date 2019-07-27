@@ -133,27 +133,56 @@ class UIPrefs(object):
 
 class Components(object):
   def __init__(self):
-    self.components = {}
+    self.clear()
     compstr = localStorage.getItem('items')
     if compstr is not None:
       for cid in compstr:
         self.modify(cid, 1)
+    self.sync()
 
   def get(self, cid):
     return self.components.get(cid, 0)
 
   def clear(self):
+    self.dirty = False
     self.components = {}
+    self.uniqueitems = {}
+    self.combinations = []
+
+  def sync(self):
+    if not self.dirty:
+      return
+    self.dirty = False
+    componentstr = self.tocomponentstr()
+    if len(componentstr) < 2:
+      self.uniqueitems = {}
+      self.combinations = []
+      return
+    if len(componentstr) & 1:
+      componentstr = componentstr + ' '
+    up = mkcombinations(tuple(componentstr))
+    uniqueitems = {}
+    result = []
+    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+      pi = list(sorted(pi, reverse = True, key = lambda i: (i.score, i.name)))
+      result.append((pi, spare))
+      for thisitem in pi:
+        uniqueitems[thisitem.combine] = thisitem
+    self.uniqueitems = uniqueitems
+    self.combinations = result
 
   def modify(self, cid, amt):
     cid = int(cid)
     componentcount = self.get(cid)
-    self.components[cid] = max(0, componentcount + amt)
+    newcount = max(0, componentcount + amt)
+    self.components[cid] = newcount
+    if newcount != componentcount:
+      self.dirty = True
 
   def values(self):
     return self.components.values()
 
-  def __str__(self):
+  def tocomponentstr(self):
     result = []
     for cid in range(8):
       count = self.get(cid)
@@ -161,6 +190,8 @@ class Components(object):
         for _ in range(count):
           result.append(str(cid))
     return ''.join(result)
+
+
 
 class Templates(object):
   def __init__(self):
@@ -201,18 +232,21 @@ class TI(object):
     if not self.ready:
       return
     self.components.clear()
+    self.components.sync()
     self.render()
 
   def inccomp(self, cid):
     if not self.ready or sum(self.components.values()) > 7:
       return
     self.components.modify(cid, 1)
+    self.components.sync()
     self.render()
 
   def deccomp(self, cid):
     if not self.ready:
       return
     self.components.modify(cid, -1)
+    self.components.sync()
     self.render()
 
   def decitem(self, fi):
@@ -220,17 +254,18 @@ class TI(object):
       return
     self.components.modify(fi[0], -1)
     self.components.modify(fi[1], -1)
+    self.components.sync()
     self.render()
-
 
   def render(self):
     def go():
       self.rendercomponents()
-      self.rendercombinations()
       self.renderwanted()
+      self.renderbuildable()
+      self.renderoneoff()
+      self.rendercombinations()
       requestAnimationFrame(self.fixtooltips)
     requestAnimationFrame(go)
-
 
   def setwanted(self, thisarg):
     if len(self.wanted) >= 16:
@@ -269,7 +304,7 @@ class TI(object):
 
   def rendercomponents(self):
     result = []
-    componentstr = str(self.components)
+    componentstr = self.components.tocomponentstr()
     if len(componentstr) > 0:
       localStorage.setItem('items', componentstr)
     else:
@@ -281,42 +316,31 @@ class TI(object):
 
   def rendercombinations(self):
     result = []
-    componentstr = str(self.components)
-    if len(componentstr) < 2:
+    if len(self.components.tocomponentstr()) < 2:
       sih('combinations', '')
       sih('buildable', '')
       self.renderoneoff({})
       return
     tmpl = self.template.get('spare')
-    if len(componentstr) & 1:
-      componentstr = componentstr + ' '
-    up = mkcombinations(tuple(componentstr))
-    uniqueitems = {}
-    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
-      if self.combinationfilter is not None:
-        if not any(i.combine == self.combinationfilter for i in pi):
-          for thisitem in pi:
-            uniqueitems[thisitem.combine] = thisitem
+    for (pi, spare) in self.components.combinations:
+      if self.combinationfilter is not None and not any(i.combine == self.combinationfilter for i in pi):
           continue
-      pi = sorted(pi, reverse = True, key = lambda i: i.score)
       result.append('<div class="combinationscontainer">')
       for thisitem in pi:
-        uniqueitems[thisitem.combine] = thisitem
-        result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1],
+        result.append(self.mkcomponentstr(thisitem.combine[0], thisitem.combine[1],
           imgclass = 'lowscore' if thisitem.score < SCORE_THRESHOLD else '',
           imgextra = 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format(thisitem.combine)))
       if spare is not None:
         result.append(tmpl.format(sparecid = spare, text = COMPONENT[int(spare)]))
       result.append('</div>')
-    self.renderbuildable(uniqueitems.values())
-    self.renderoneoff(uniqueitems)
     sih('combinations', ''.join(result))
 
-  def renderbuildable(self, uniqueitems):
+  def renderbuildable(self):
+    uniqueitems = self.components.uniqueitems
     result = []
-    for item in sorted(uniqueitems, reverse = True, key = lambda i: i.score):
+    for item in sorted(uniqueitems.values(), reverse = True, key = lambda i: i.score):
       c = item.combine
-      result.append(self.rendercomponentstr(c[0], c[1], imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
+      result.append(self.mkcomponentstr(c[0], c[1], imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
         imgclass = 'lowscore' if item.score < SCORE_THRESHOLD else ''))
     sih('buildable', ''.join(result))
 
@@ -335,7 +359,7 @@ class TI(object):
         c1buildable = self.components.get(int(c[0])) > 0
         c2buildable = self.components.get(int(c[1])) > 0
         buildable = c1buildable and c2buildable
-      result.append(self.rendercomponentstr(c[0], c[1],
+      result.append(self.mkcomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
         imgclass = 'showunbuildable' if not buildable else '',
@@ -343,7 +367,8 @@ class TI(object):
       ))
     sih('wanted', ''.join(result))
 
-  def renderoneoff(self, uniqueitems):
+  def renderoneoff(self):
+    uniqueitems = self.components.uniqueitems
     oneoff = []
     for cid1c in range(8):
       havec1 = self.components.get(cid1c)
@@ -373,7 +398,7 @@ class TI(object):
       if c2buildable:
         c = (c[1], c[0])
         c1buildable, c2buildable = (c2buildable, c1buildable)
-      result.append(self.rendercomponentstr(c[0], c[1],
+      result.append(self.mkcomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
         imgclass = 'showunbuildablefonly lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildablefonly'
@@ -381,7 +406,7 @@ class TI(object):
     sih('oneoff', ''.join(result))
 
 
-  def rendercomponentstr(self, c1, c2, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
+  def mkcomponentstr(self, c1, c2, minitclass = '', minibclass = '', imgclass = '', imgextra = ''):
     c1name = COMPONENT[int(c1)]
     c2name = COMPONENT[int(c2)]
     ck = ''.join((c2, c1) if c1 > c2 else (c1, c2))
