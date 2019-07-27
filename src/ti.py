@@ -250,11 +250,13 @@ class TI(object):
     tmpl = self.template.get('combfilter')
     sih('combinationsfilter', tmpl.format(combine = filt))
     self.rendercombinations()
+    self.fixtooltips()
 
   def clearcombfilter(self):
     self.combinationfilter = None
     sih('combinationsfilter', '')
     self.rendercombinations()
+    self.fixtooltips()
 
   # __pragma__('kwargs')
   def mkwantedoptions(self):
