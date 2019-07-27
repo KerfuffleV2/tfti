@@ -1,26 +1,30 @@
 # Description
 
-Tools for the game Team Fight Tactics to aid with calculating what items are buildable from a set of components.
+Tool for the game Team Fight Tactics to aid with calculating what items are buildable from a set of components.
 
 # Features
 
-1. Shows all items you can build from a set of components.
+1. Shows all combinations of items you can build from your current component. This is the primary unique feature this tool offers.
 
-2. Shows all permutations of the items you can build from a set of components.
+2. Shows all items you can build from a set of components.
 
-3. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
+3. Shows all items you are one component off from building.
 
-This tool is primarily useful displayed on a tab or device while playing.
+4. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
+
+5. You can filter combinations to show only groups with Sword of Shojin for example.
+
+This tool is primarily useful displayed on a tab or device while playing. If you don't play in fullscreen mode, you should be able to hit F9 to unlock the mouse cursor.
 
 # Help
 
 Click a component in **Shop** to add it. You can click it in **Have** to remove it.
 
-You can add a wanted item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it.
+You can add watched item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it.
 
 You can click an item in **Buildable** to remove the components for that item.
 
-The **Combinations** section shows all permutations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out.
+The **Combinations** section shows all permutations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter by that item. Click the filter to remove it.
 
 # Building
 
@@ -28,8 +32,13 @@ The **Combinations** section shows all permutations of buildable items with the 
 2. You will need Transcrypt: https://www.transcrypt.org/ - I suggest following their instructions to set it up with a Python virtual environment.
 3. If on a Unix type OS, run `utils/build.sh`. Alternatively inspect the script and run the equivalent commands for your OS.
 
+# Contact
+
+The best way to get in touch with me is by reddit private message: https://www.reddit.com/message/compose?to=KerfuffleV2
+
+Alternatively, you can add an issue in the Github repo for this project ( https://github.com/KerfuffleV2/tfti/issues ) but it may take me a while to respond as I don't check that frequently.
+
 # Tips
 
 1. You can serve a local version of the site by changing to the `site` directory and running `python3 -m http.server 8000` and then navigate to `http://127.0.0.1:8000/index.html`.
 
-2. To avoid having to ALT-TAB when the game is running, you can hit F9 to unlock the cursor in League. You probably need to be in a mode other than Fullscreen for this to work.

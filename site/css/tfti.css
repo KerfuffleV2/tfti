@@ -55,11 +55,15 @@ div.header {
 
 }
 
-div.clearbutton {
+div#clearbutton {
   display: inline-block;
   font: inherit;
   color: #a66;
   cursor: pointer;
+}
+
+div#combinationsfilter {
+  display: inline-block;
 }
 
 img.del:hover { filter: var(--delfilter); }

@@ -65,6 +65,7 @@ def mkcombinations(l):
       sk = ''.join(tempresult)
       if sk in seen:
         return
+      seen.add(sk)
       retval = list(items.bycombine[k] for k in tempresult)
       result.append((retval, spare))
     else:
@@ -189,6 +190,7 @@ class TI(object):
       self.wanted = set(wantedstr.split(','))
     else:
       self.wanted = set()
+    self.combinationfilter = None
     self.ready = False
 
   def setready(self):
@@ -243,6 +245,17 @@ class TI(object):
     self.renderwanted()
     self.fixtooltips()
 
+  def setcombfilter(self, filt):
+    self.combinationfilter = filt
+    tmpl = self.template.get('combfilter')
+    sih('combinationsfilter', tmpl.format(combine = filt))
+    self.rendercombinations()
+
+  def clearcombfilter(self):
+    self.combinationfilter = None
+    sih('combinationsfilter', '')
+    self.rendercombinations()
+
   # __pragma__('kwargs')
   def mkwantedoptions(self):
     tmpl = self.template.get('wanted-option')
@@ -278,12 +291,18 @@ class TI(object):
     up = mkcombinations(tuple(componentstr))
     uniqueitems = {}
     for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
+      if self.combinationfilter is not None:
+        if not any(i.combine == self.combinationfilter for i in pi):
+          for thisitem in pi:
+            uniqueitems[thisitem.combine] = thisitem
+          continue
       pi = sorted(pi, reverse = True, key = lambda i: i.score)
       result.append('<div class="combinationscontainer">')
       for thisitem in pi:
         uniqueitems[thisitem.combine] = thisitem
         result.append(self.rendercomponentstr(thisitem.combine[0], thisitem.combine[1],
-          imgclass = 'lowscore' if thisitem.score < SCORE_THRESHOLD else ''))
+          imgclass = 'lowscore' if thisitem.score < SCORE_THRESHOLD else '',
+          imgextra = 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format(thisitem.combine)))
       if spare is not None:
         result.append(tmpl.format(sparecid = spare, text = COMPONENT[int(spare)]))
       result.append('</div>')
