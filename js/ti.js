@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-27 01:49:34
+// Transcrypt'ed from Python, 2019-07-27 07:20:05
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -135,29 +135,75 @@ export var UIPrefs =  __class__ ('UIPrefs', [object], {
 export var Components =  __class__ ('Components', [object], {
 	__module__: __name__,
 	get __init__ () {return __get__ (this, function (self) {
-		self.components = dict ({});
+		self.py_clear ();
 		var compstr = localStorage.getItem ('items');
 		if (compstr !== null) {
 			for (var cid of compstr) {
 				self.modify (cid, 1);
 			}
 		}
+		self.sync ();
 	}, '__init__');},
 	get py_get () {return __get__ (this, function (self, cid) {
 		return self.components.py_get (cid, 0);
 	}, 'get');},
 	get py_clear () {return __get__ (this, function (self) {
+		self.dirty = false;
 		self.components = dict ({});
+		self.uniqueitems = dict ({});
+		self.combinations = [];
 	}, 'clear');},
+	get sync () {return __get__ (this, function (self) {
+		if (!(self.dirty)) {
+			return ;
+		}
+		console.log ('regen');
+		self.dirty = false;
+		var componentstr = self.tocomponentstr ();
+		if (len (componentstr) < 2) {
+			self.uniqueitems = dict ({});
+			self.combinations = [];
+			return ;
+		}
+		if (len (componentstr) & 1) {
+			var componentstr = componentstr + ' ';
+		}
+		var up = mkcombinations (tuple (componentstr));
+		var uniqueitems = dict ({});
+		var result = [];
+		for (var [pi, spare] of sorted (up, __kwargtrans__ ({reverse: true, key: (function __lambda__ (ps) {
+			return sum ((function () {
+				var __accu0__ = [];
+				for (var i of ps [0]) {
+					__accu0__.append (i.score);
+				}
+				return py_iter (__accu0__);
+			}) ());
+		})}))) {
+			var pi = list (sorted (pi, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
+				return tuple ([i.score, i.py_name]);
+			})})));
+			result.append (tuple ([pi, spare]));
+			for (var thisitem of pi) {
+				uniqueitems [thisitem.combine] = thisitem;
+			}
+		}
+		self.uniqueitems = uniqueitems;
+		self.combinations = result;
+	}, 'sync');},
 	get modify () {return __get__ (this, function (self, cid, amt) {
 		var cid = int (cid);
 		var componentcount = self.py_get (cid);
-		self.components [cid] = max (0, componentcount + amt);
+		var newcount = max (0, componentcount + amt);
+		self.components [cid] = newcount;
+		if (newcount != componentcount) {
+			self.dirty = true;
+		}
 	}, 'modify');},
 	get py_values () {return __get__ (this, function (self) {
 		return self.components.py_values ();
 	}, 'values');},
-	get __str__ () {return __get__ (this, function (self) {
+	get tocomponentstr () {return __get__ (this, function (self) {
 		var result = [];
 		for (var cid = 0; cid < 8; cid++) {
 			var count = self.py_get (cid);
@@ -168,7 +214,7 @@ export var Components =  __class__ ('Components', [object], {
 			}
 		}
 		return ''.join (result);
-	}, '__str__');}
+	}, 'tocomponentstr');}
 });
 export var Templates =  __class__ ('Templates', [object], {
 	__module__: __name__,
@@ -218,6 +264,7 @@ export var TI =  __class__ ('TI', [object], {
 			return ;
 		}
 		self.components.py_clear ();
+		self.components.sync ();
 		self.render ();
 	}, 'clearitems');},
 	get inccomp () {return __get__ (this, function (self, cid) {
@@ -225,6 +272,7 @@ export var TI =  __class__ ('TI', [object], {
 			return ;
 		}
 		self.components.modify (cid, 1);
+		self.components.sync ();
 		self.render ();
 	}, 'inccomp');},
 	get deccomp () {return __get__ (this, function (self, cid) {
@@ -232,6 +280,7 @@ export var TI =  __class__ ('TI', [object], {
 			return ;
 		}
 		self.components.modify (cid, -(1));
+		self.components.sync ();
 		self.render ();
 	}, 'deccomp');},
 	get decitem () {return __get__ (this, function (self, fi) {
@@ -240,13 +289,16 @@ export var TI =  __class__ ('TI', [object], {
 		}
 		self.components.modify (fi [0], -(1));
 		self.components.modify (fi [1], -(1));
+		self.components.sync ();
 		self.render ();
 	}, 'decitem');},
 	get render () {return __get__ (this, function (self) {
 		var go = function () {
 			self.rendercomponents ();
-			self.rendercombinations ();
 			self.renderwanted ();
+			self.renderbuildable ();
+			self.renderoneoff ();
+			self.rendercombinations ();
 			requestAnimationFrame (self.fixtooltips);
 		};
 		requestAnimationFrame (go);
@@ -330,7 +382,7 @@ export var TI =  __class__ ('TI', [object], {
 		else {
 		}
 		var result = [];
-		var componentstr = str (self.components);
+		var componentstr = self.components.tocomponentstr ();
 		if (len (componentstr) > 0) {
 			localStorage.setItem ('items', componentstr);
 		}
@@ -358,86 +410,35 @@ export var TI =  __class__ ('TI', [object], {
 		else {
 		}
 		var result = [];
-		var componentstr = str (self.components);
-		if (len (componentstr) < 2) {
+		if (len (self.components.tocomponentstr ()) < 2) {
 			sih ('combinations', '');
 			sih ('buildable', '');
 			self.renderoneoff (dict ({}));
 			return ;
 		}
 		var tmpl = self.template.py_get ('spare');
-		if (len (componentstr) & 1) {
-			var componentstr = componentstr + ' ';
-		}
-		var up = mkcombinations (tuple (componentstr));
-		var uniqueitems = dict ({});
-		for (var [pi, spare] of sorted (up, __kwargtrans__ ({reverse: true, key: (function __lambda__ (ps) {
-			if (arguments.length) {
-				var __ilastarg0__ = arguments.length - 1;
-				if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
-					var __allkwargs0__ = arguments [__ilastarg0__--];
-					for (var __attrib0__ in __allkwargs0__) {
-						switch (__attrib0__) {
-							case 'ps': var ps = __allkwargs0__ [__attrib0__]; break;
-						}
-					}
-				}
-			}
-			else {
-			}
-			return sum ((function () {
+		for (var [pi, spare] of self.components.combinations) {
+			if (self.combinationfilter !== null && !(any ((function () {
 				var __accu0__ = [];
-				for (var i of ps [0]) {
-					__accu0__.append (i.score);
+				for (var i of pi) {
+					__accu0__.append (i.combine == self.combinationfilter);
 				}
 				return py_iter (__accu0__);
-			}) ());
-		})}))) {
-			if (self.combinationfilter !== null) {
-				if (!(any ((function () {
-					var __accu0__ = [];
-					for (var i of pi) {
-						__accu0__.append (i.combine == self.combinationfilter);
-					}
-					return py_iter (__accu0__);
-				}) ()))) {
-					for (var thisitem of pi) {
-						uniqueitems [thisitem.combine] = thisitem;
-					}
-					continue;
-				}
+			}) ()))) {
+				continue;
 			}
-			var pi = sorted (pi, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
-				if (arguments.length) {
-					var __ilastarg0__ = arguments.length - 1;
-					if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
-						var __allkwargs0__ = arguments [__ilastarg0__--];
-						for (var __attrib0__ in __allkwargs0__) {
-							switch (__attrib0__) {
-								case 'i': var i = __allkwargs0__ [__attrib0__]; break;
-							}
-						}
-					}
-				}
-				else {
-				}
-				return i.score;
-			})}));
 			result.append ('<div class="combinationscontainer">');
 			for (var thisitem of pi) {
-				uniqueitems [thisitem.combine] = thisitem;
-				result.append (self.rendercomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: (thisitem.score < SCORE_THRESHOLD ? 'lowscore' : ''), imgextra: 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format (thisitem.combine)})));
+				result.append (self.mkcomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: (thisitem.score < SCORE_THRESHOLD ? 'lowscore' : ''), imgextra: 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format (thisitem.combine)})));
 			}
 			if (spare !== null) {
 				result.append (tmpl.format (__kwargtrans__ ({sparecid: spare, text: COMPONENT [int (spare)]})));
 			}
 			result.append ('</div>');
 		}
-		self.renderbuildable (uniqueitems.py_values ());
-		self.renderoneoff (uniqueitems);
 		sih ('combinations', ''.join (result));
 	}, 'rendercombinations');},
-	get renderbuildable () {return __get__ (this, function (self, uniqueitems) {
+	get renderbuildable () {return __get__ (this, function (self) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
 			if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
@@ -445,15 +446,15 @@ export var TI =  __class__ ('TI', [object], {
 				for (var __attrib0__ in __allkwargs0__) {
 					switch (__attrib0__) {
 						case 'self': var self = __allkwargs0__ [__attrib0__]; break;
-						case 'uniqueitems': var uniqueitems = __allkwargs0__ [__attrib0__]; break;
 					}
 				}
 			}
 		}
 		else {
 		}
+		var uniqueitems = self.components.uniqueitems;
 		var result = [];
-		for (var item of sorted (uniqueitems, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
+		for (var item of sorted (uniqueitems.py_values (), __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
 			if (arguments.length) {
 				var __ilastarg0__ = arguments.length - 1;
 				if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
@@ -470,7 +471,7 @@ export var TI =  __class__ ('TI', [object], {
 			return i.score;
 		})}))) {
 			var c = item.combine;
-			result.append (self.rendercomponentstr (c [0], c [1], __kwargtrans__ ({imgextra: 'onclick="ti.ti.decitem(\'{0}\')"'.format (c), imgclass: (item.score < SCORE_THRESHOLD ? 'lowscore' : '')})));
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({imgextra: 'onclick="ti.ti.decitem(\'{0}\')"'.format (c), imgclass: (item.score < SCORE_THRESHOLD ? 'lowscore' : '')})));
 		}
 		sih ('buildable', ''.join (result));
 	}, 'renderbuildable');},
@@ -508,11 +509,11 @@ export var TI =  __class__ ('TI', [object], {
 				var c2buildable = self.components.py_get (int (c [1])) > 0;
 				var buildable = c1buildable && c2buildable;
 			}
-			result.append (self.rendercomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (!(buildable) ? 'showunbuildable' : ''), imgextra: 'onclick=\'ti.ti.delwanted("{0}")\''.format (c)})));
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (!(buildable) ? 'showunbuildable' : ''), imgextra: 'onclick=\'ti.ti.delwanted("{0}")\''.format (c)})));
 		}
 		sih ('wanted', ''.join (result));
 	}, 'renderwanted');},
-	get renderoneoff () {return __get__ (this, function (self, uniqueitems) {
+	get renderoneoff () {return __get__ (this, function (self) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
 			if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
@@ -520,13 +521,13 @@ export var TI =  __class__ ('TI', [object], {
 				for (var __attrib0__ in __allkwargs0__) {
 					switch (__attrib0__) {
 						case 'self': var self = __allkwargs0__ [__attrib0__]; break;
-						case 'uniqueitems': var uniqueitems = __allkwargs0__ [__attrib0__]; break;
 					}
 				}
 			}
 		}
 		else {
 		}
+		var uniqueitems = self.components.uniqueitems;
 		var oneoff = [];
 		for (var cid1c = 0; cid1c < 8; cid1c++) {
 			var havec1 = self.components.py_get (cid1c);
@@ -585,11 +586,11 @@ export var TI =  __class__ ('TI', [object], {
 				var c1buildable = __left0__ [0];
 				var c2buildable = __left0__ [1];
 			}
-			result.append (self.rendercomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (item.score < SCORE_THRESHOLD ? 'showunbuildablefonly lowscore' : 'showunbuildablefonly')})));
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (item.score < SCORE_THRESHOLD ? 'showunbuildablefonly lowscore' : 'showunbuildablefonly')})));
 		}
 		sih ('oneoff', ''.join (result));
 	}, 'renderoneoff');},
-	get rendercomponentstr () {return __get__ (this, function (self, c1, c2, minitclass, minibclass, imgclass, imgextra) {
+	get mkcomponentstr () {return __get__ (this, function (self, c1, c2, minitclass, minibclass, imgclass, imgextra) {
 		if (typeof minitclass == 'undefined' || (minitclass != null && minitclass.hasOwnProperty ("__kwargtrans__"))) {;
 			var minitclass = '';
 		};
@@ -627,7 +628,7 @@ export var TI =  __class__ ('TI', [object], {
 		var item = py_items.bycombine [ck];
 		var itemtitle = '{0}: {1}'.format (item.py_name, item.text);
 		return self.template.py_get ('item-with-components').format (__kwargtrans__ ({cid1: c1, cid2: c2, combine: ck, c1name: c1name, c2name: c2name, itemtitle: itemtitle, minibclass: minibclass, minitclass: minitclass, imgclass: imgclass, imgextra: imgextra}));
-	}, 'rendercomponentstr');},
+	}, 'mkcomponentstr');},
 	get rendershop () {return __get__ (this, function (self) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
