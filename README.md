@@ -4,7 +4,7 @@ Tool for the game Team Fight Tactics to aid with calculating what items are buil
 
 # Features
 
-1. Shows all combinations of items you can build from your current component. This is the primary unique feature this tool offers.
+1. Shows all combinations of items you can build from your components. This is the primary unique feature the tool offers.
 
 2. Shows all items you can build from a set of components.
 
@@ -12,19 +12,19 @@ Tool for the game Team Fight Tactics to aid with calculating what items are buil
 
 4. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
 
-5. You can filter combinations to show only groups with Sword of Shojin for example.
+5. You can filter combinations to show only groups with Sword of Shojin, for example.
 
 This tool is primarily useful displayed on a tab or device while playing. If you don't play in fullscreen mode, you should be able to hit F9 to unlock the mouse cursor.
 
 # Help
 
-Click a component in **Shop** to add it. You can click it in **Have** to remove it.
+Click a component in **Shop** to add it. You can click it in **Have** to remove it. You generally want to keep this is sync with the components you have in game.
 
 You can add watched item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it.
 
-You can click an item in **Buildable** to remove the components for that item.
+You can click an item in **Buildable** to remove both components for that item.
 
-The **Combinations** section shows all permutations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter by that item. Click the filter to remove it.
+The **Combinations** section shows all permutations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter out any groups that don't have the item. Click the filter to clear it.
 
 # Building
 
