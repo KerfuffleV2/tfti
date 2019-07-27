@@ -46,6 +46,12 @@
       </div>
     </script>
 
+    <script type="text/tfti-template" id="template-combfilter">
+      <div class="minib">
+        [<b>Filter</b>: <img src="img/{combine}.png" class="minib" >]
+      </div>
+    </script>
+
     <script type="module">
       import * as ti from "./js/ti.js";
       window.ti = ti;
@@ -65,7 +71,7 @@
         <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click component to remove, click ✗ to clear">
           <div class="header" >
             Have:
-            <div class="clearbutton" onclick="ti.ti.clearitems()" title="Clear items">✗</div>
+            <div id="clearbutton" onclick="ti.ti.clearitems()" title="Clear items">✗</div>
           </div>
         </div>
       </div>
@@ -97,8 +103,9 @@
       <br class="clear">
     </div>
     <hr>
-    <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="No actions currently">
+    <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click an item to filter by that item, click filter to remove">
       <div class="header">Combinations:</div>
+      <div id="combinationsfilter" onclick="ti.ti.clearcombfilter()"></div>
     </div>
     <div id="combinations" class="combogrid"></div>
     <br class="clear">

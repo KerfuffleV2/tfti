@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-26 13:12:48
+// Transcrypt'ed from Python, 2019-07-27 01:23:27
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -48,6 +48,7 @@ export var mkcombinations = function (l) {
 			if (__in__ (sk, seen)) {
 				return ;
 			}
+			seen.add (sk);
 			var retval = list ((function () {
 				var __accu0__ = [];
 				for (var k of tempresult) {
@@ -205,6 +206,7 @@ export var TI =  __class__ ('TI', [object], {
 		else {
 			self.wanted = set ();
 		}
+		self.combinationfilter = null;
 		self.ready = false;
 	}, '__init__');},
 	get setready () {return __get__ (this, function (self) {
@@ -263,6 +265,17 @@ export var TI =  __class__ ('TI', [object], {
 		self.renderwanted ();
 		self.fixtooltips ();
 	}, 'delwanted');},
+	get setcombfilter () {return __get__ (this, function (self, filt) {
+		self.combinationfilter = filt;
+		var tmpl = self.template.py_get ('combfilter');
+		sih ('combinationsfilter', tmpl.format (__kwargtrans__ ({combine: filt})));
+		self.rendercombinations ();
+	}, 'setcombfilter');},
+	get clearcombfilter () {return __get__ (this, function (self) {
+		self.combinationfilter = null;
+		sih ('combinationsfilter', '');
+		self.rendercombinations ();
+	}, 'clearcombfilter');},
 	get mkwantedoptions () {return __get__ (this, function (self) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
@@ -378,6 +391,20 @@ export var TI =  __class__ ('TI', [object], {
 				return py_iter (__accu0__);
 			}) ());
 		})}))) {
+			if (self.combinationfilter !== null) {
+				if (!(any ((function () {
+					var __accu0__ = [];
+					for (var i of pi) {
+						__accu0__.append (i.combine == self.combinationfilter);
+					}
+					return py_iter (__accu0__);
+				}) ()))) {
+					for (var thisitem of pi) {
+						uniqueitems [thisitem.combine] = thisitem;
+					}
+					continue;
+				}
+			}
 			var pi = sorted (pi, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
 				if (arguments.length) {
 					var __ilastarg0__ = arguments.length - 1;
@@ -397,7 +424,7 @@ export var TI =  __class__ ('TI', [object], {
 			result.append ('<div class="combinationscontainer">');
 			for (var thisitem of pi) {
 				uniqueitems [thisitem.combine] = thisitem;
-				result.append (self.rendercomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: (thisitem.score < SCORE_THRESHOLD ? 'lowscore' : '')})));
+				result.append (self.rendercomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: (thisitem.score < SCORE_THRESHOLD ? 'lowscore' : ''), imgextra: 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format (thisitem.combine)})));
 			}
 			if (spare !== null) {
 				result.append (tmpl.format (__kwargtrans__ ({sparecid: spare, text: COMPONENT [int (spare)]})));
