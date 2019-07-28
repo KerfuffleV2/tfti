@@ -20,7 +20,7 @@ This tool is primarily useful displayed on a tab or device while playing. If you
 
 Click a component in **Shop** to add it. You can click it in **Have** to remove it. You generally want to keep this is sync with the components you have in game.
 
-You can add watched item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it.
+You can add watched item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it. You may also use separate want list profiles for different builds using an anchor link. For example: https://kerfufflev2.github.io/tfti/#yordles
 
 You can click an item in **Buildable** to remove both components for that item.
 
