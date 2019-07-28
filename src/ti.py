@@ -453,7 +453,7 @@ class TI(object):
     oneoff = []
     for cid1c in range(8):
       havec1 = self.components.get(cid1c)
-      if havec1 != 1:
+      if havec1 == 0:
         continue
       for cid2c in range(8):
         havec2 = self.components.get(cid2c)
@@ -467,11 +467,15 @@ class TI(object):
         if ck in uniqueitems:
           continue
         if cid1 == cid2:
+          if currhavec1 > 1:
+            continue
           c1buildable = True
           c2buildable = False
         else:
           c1buildable = currhavec1 > 0
           c2buildable = havec2 > 0
+          if c1buildable and c2buildable:
+            continue
         oneoff.append((c1buildable, c2buildable, items.bycombine[ck]))
     result = []
     for c1buildable, c2buildable, item in sorted(oneoff, reverse = True, key = lambda i: i[2].score):
