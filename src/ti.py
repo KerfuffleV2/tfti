@@ -89,46 +89,107 @@ def sih(k, v):
 class UIPrefs(object):
   themes = ('Dark', 'Light')
   iconsizes = (('Medium', '0.75'), ('Large', '1.0'), ('Small', '0.5'))
+  defaultprefs = {
+    'ver': 0,
+    'theme': 0,
+    'iconsize': 0,
+    'showsection': { 'oneoff': 1, 'combinations': 1 }
+  }
 
   def __init__(self):
-    self.iconsize = 0
-    try:
-      iconsizestr = localStorage.getItem('iconsize')
-      if iconsizestr is not None:
-        iconsznum = max(0, int(iconsizestr)) % len(self.iconsizes)
-        self.seticonsize(iconsznum)
-    except:
-      pass
-    self.theme = 0
-    try:
-      themestr = localStorage.getItem('theme')
-      if themestr is not None:
-        themenum = max(0, int(themestr)) % len(self.themes)
-        self.settheme(themenum)
-    except:
-      pass
+    self.prefs = self.defaultprefs
+    self.load()
+
+  def load(self):
+    dprefs = self.defaultprefs
+    prefsj = localStorage.getItem('prefs')
+    if prefsj is not None:
+      prefs = dict(JSON.parse(prefsj))
+    else:
+      prefs = deepcopy(dprefs)
+      self.migrate(prefs)
+    prefs['showsection'] = dict(prefs['showsection'])
+    prefs['iconsize'] = max(0, prefs['iconsize']) % len(self.iconsizes)
+    prefs['theme'] = max(0, prefs['theme']) % len(self.themes)
+    self.seticonsize(prefs['iconsize'])
+    self.settheme(prefs['theme'])
+    for k,v in prefs['showsection'].items():
+      self.setshowsection(k,v)
+    self.prefs = prefs
+
+  def save(self):
+    localStorage.setItem('prefs', JSON.stringify(self.prefs))
+
+  def migrate(self, prefs):
+    def loadiconsize():
+      try:
+        iconsizestr = localStorage.getItem('iconsize')
+        if iconsizestr is not None:
+          iconsznum = max(0, int(iconsizestr)) % len(self.iconsizes)
+          prefs['iconsize'] = iconsznum
+      except:
+        pass
+    def loadtheme():
+      try:
+        themestr = localStorage.getItem('theme')
+        if themestr is not None:
+          themenum = max(0, int(themestr)) % len(self.themes)
+          prefs['theme'] = themenum
+      except:
+        pass
+    loadiconsize()
+    loadtheme()
+    localStorage.removeItem('iconsize')
+    localStorage.removeItem('theme')
+
+  def toggleshowsection(self, secname):
+    shown = self.prefs['showsection'].get(secname, self.defaultprefs['showsection'].get(secname, 1))
+    nshown = 1 if shown == 0 else 0
+    self.setshowsection(secname, nshown)
+
+  def setshowsection(self, secname, shown):
+    old = self.prefs['showsection'][secname]
+    attrname = 'data-hide-' + secname
+    if shown:
+      document.documentElement.removeAttribute(attrname)
+    else:
+      document.documentElement.setAttribute(attrname, 1)
+    sih('show' + secname, 'Off' if shown == 0 else 'On')
+    if old == shown:
+      return
+    self.prefs['showsection'][secname] = shown
+    self.save()
 
   def toggleiconsize(self):
     iconsznum = (self.iconsize + 1) % len(self.iconsizes)
     self.seticonsize(iconsznum)
 
   def seticonsize(self, iconsznum):
+    old = self.iconsize
     self.iconsize = iconsznum
     sizename,scale = self.iconsizes[iconsznum]
     document.documentElement.style.setProperty('--icon-scale', scale)
-    localStorage.setItem('iconsize', str(iconsznum))
     sih('iconsize', sizename)
+    if old == iconsznum:
+      return
+    self.prefs['iconsize'] = iconsznum
+    self.save()
+
 
   def toggletheme(self):
     themenum = (self.theme + 1) % len(self.themes)
     self.settheme(themenum)
 
   def settheme(self, themenum):
+    old = self.theme
     themename = self.themes[themenum]
     self.theme = themenum
     document.documentElement.setAttribute('data-theme', themename.lower())
     sih('theme', themename)
-    localStorage.setItem('theme', str(themenum))
+    if old == themenum:
+      return
+    self.prefs['theme'] = themenum
+    self.save()
 
 
 class Components(object):
@@ -216,7 +277,8 @@ class TI(object):
     self.uipref = UIPrefs()
     self.components = Components()
     self.template = Templates()
-    wantedstr = localStorage.getItem('wanted')
+    self.wantedprofile = ''.join(['wanted', window.location.hash or ''])
+    wantedstr = localStorage.getItem(self.wantedprofile)
     if wantedstr is not None:
       self.wanted = set(wantedstr.split(','))
     else:
@@ -346,9 +408,9 @@ class TI(object):
 
   def renderwanted(self):
     if len(self.wanted) > 0:
-      localStorage.setItem('wanted', ','.join(self.wanted))
+      localStorage.setItem(self.wantedprofile, ','.join(self.wanted))
     else:
-      localStorage.removeItem('wanted')
+      localStorage.removeItem(self.wantedprofile)
     result = []
     for c in self.wanted:
       if c[0] == c[1]:
