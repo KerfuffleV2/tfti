@@ -12,7 +12,7 @@ Tool for the game Team Fight Tactics to aid with calculating what items are buil
 
 4. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
 
-5. You can filter combinations to show only groups with Sword of Shojin, for example.
+5. You can filter Combinations to show only groups with Sword of Shojin, for example.
 
 This tool is primarily useful displayed on a tab or device while playing. If you don't play in fullscreen mode, you should be able to hit F9 to unlock the mouse cursor.
 
@@ -24,7 +24,7 @@ You can add watched item by selecting the name from the dropdown under **Want**.
 
 You can click an item in **Buildable** to remove both components for that item.
 
-The **Combinations** section shows all permutations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter out any groups that don't have the item. Click the filter to clear it.
+The **Combinations** section shows all combinations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter out any groups that don't have the item. Click the filter to clear it.
 
 # Building
 
