@@ -62,9 +62,10 @@ div#clearbutton {
   cursor: pointer;
 }
 
-div#combinationsfilter {
+div#combinationsfilter, div#oneofffilter {
   display: inline-block;
 }
+
 
 img.del:hover { filter: var(--delfilter); }
 img.add:hover { filter: var(--addfilter); }
@@ -116,6 +117,9 @@ div.combinationscontainer {
   padding: var(--pad-size);
   width: calc(var(--col-size) + var(--pad-size));
 }
+
+:root[data-hide-combinations="1"] div#combinationsection { display: none; }
+:root[data-hide-oneoff="1"] div#oneoffsection { display: none; }
 
 div.combogrid {
   display: grid;

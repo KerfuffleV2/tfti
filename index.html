@@ -6,6 +6,14 @@
     <title>TFT Item Combinations</title>
     <meta name="description" content="Teamfight Tactics item combination helper">
     <meta name="author" content="Kerfuffle">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153735-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-153735-2');
+</script>
     <script type="text/javascript" src="./js/items.js"></script>
 
     <script type="text/tfti-template" id="template-shop">
@@ -52,10 +60,18 @@
       </div>
     </script>
 
+    <script type="text/tfti-template" id="template-oneofffilter">
+      <div class="minib">
+        [<b>Filter</b>: <img src="img/{component}.png" class="minib" >]
+      </div>
+    </script>
+
+
     <script type="module">
       import * as ti from "./js/ti.js";
       window.ti = ti;
       document.addEventListener("DOMContentLoaded", ti.ti.setready)
+      window.addEventListener("hashchange", function() { window.location.reload(true); }, false)
     </script>
     <link rel="stylesheet" type="text/css" href="./css/balloon.min.css" media="all">
     <link rel="stylesheet" type="text/css" href="./css/tfti.css" media="all">
@@ -94,31 +110,43 @@
       <div class="header">Buildable:</div>
     </div>
     <div id="buildable"></div>
-    <div id="oneoffcontainer">
+    <div id="oneoffsection">
       <br class="clear">
-      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building">
+      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building; Click item to filter by missing component, click filter to remove">
         <div class="header">One-off:</div>
+        <div id="oneofffilter" onclick="ti.ti.clearoneofffilter()"></div>
       </div>
       <div id="oneoff"></div>
       <br class="clear">
     </div>
-    <hr>
-    <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click an item to filter by that item, click filter to remove">
-      <div class="header">Combinations:</div>
-      <div id="combinationsfilter" onclick="ti.ti.clearcombfilter()"></div>
+    <div id="combinationsection">
+      <hr>
+      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click an item to filter by that item, click filter to remove">
+        <div class="header">Combinations:</div>
+        <div id="combinationsfilter" onclick="ti.ti.clearcombfilter()"></div>
+      </div>
+      <div id="combinations" class="combogrid"></div>
+      <br class="clear">
     </div>
-    <div id="combinations" class="combogrid"></div>
-    <br class="clear">
     <hr>
     <div id="footer">
       <ul class="footer">
         <li class="footeritem">by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></li>
         <li class="footeritem"><a href="https://github.com/KerfuffleV2/tfti#readme">Help</a></li>
-        <li class="footeritem">
-          Icon size: <div id="iconsize" onclick="ti.ti.uipref.toggleiconsize()">Medium</a>
+        <li class="footeritem" onclick="ti.ti.uipref.toggleiconsize()">
+          Icon size: <div id="iconsize">Medium</div>
+        </li>
+        <li class="footeritem" onclick="ti.ti.uipref.toggletheme()">
+          Theme: <div id="theme">Dark</div>
+        </li>
+        <li class="footeritem" onclick="ti.ti.uipref.toggleshowsection('combinations')">
+          Combinations: <div id="showcombinations">On</div>
+        </li>
+        <li class="footeritem" onclick="ti.ti.uipref.toggleshowsection('oneoff')">
+          One-off: <div id="showoneoff">Off</div>
         </li>
         <li class="footeritem">
-          Theme: <div id="theme" onclick="ti.ti.uipref.toggletheme()">Dark</a>
+          <a href="reset.html">Reset</a>
         </li>
     </ul>
   </body>

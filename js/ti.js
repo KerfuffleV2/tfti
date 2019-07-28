@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-27 07:20:05
+// Transcrypt'ed from Python, 2019-07-28 06:26:28
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -83,53 +83,118 @@ export var UIPrefs =  __class__ ('UIPrefs', [object], {
 	__module__: __name__,
 	themes: tuple (['Dark', 'Light']),
 	iconsizes: tuple ([tuple (['Medium', '0.75']), tuple (['Large', '1.0']), tuple (['Small', '0.5'])]),
+	defaultprefs: dict ({'ver': 0, 'theme': 0, 'iconsize': 0, 'showsection': dict ({'oneoff': 1, 'combinations': 1})}),
 	get __init__ () {return __get__ (this, function (self) {
-		self.iconsize = 0;
-		try {
-			var iconsizestr = localStorage.getItem ('iconsize');
-			if (iconsizestr !== null) {
-				var iconsznum = __mod__ (max (0, int (iconsizestr)), len (self.iconsizes));
-				self.seticonsize (iconsznum);
-			}
-		}
-		catch (__except0__) {
-			// pass;
-		}
-		self.theme = 0;
-		try {
-			var themestr = localStorage.getItem ('theme');
-			if (themestr !== null) {
-				var themenum = __mod__ (max (0, int (themestr)), len (self.themes));
-				self.settheme (themenum);
-			}
-		}
-		catch (__except0__) {
-			// pass;
-		}
+		self.prefs = self.defaultprefs;
+		self.load ();
 	}, '__init__');},
+	get load () {return __get__ (this, function (self) {
+		var dprefs = self.defaultprefs;
+		var prefsj = localStorage.getItem ('prefs');
+		if (prefsj !== null) {
+			var prefs = dict (JSON.parse (prefsj));
+		}
+		else {
+			var prefs = deepcopy (dprefs);
+			self.migrate (prefs);
+		}
+		prefs ['showsection'] = dict (prefs ['showsection']);
+		prefs ['iconsize'] = __mod__ (max (0, prefs ['iconsize']), len (self.iconsizes));
+		prefs ['theme'] = __mod__ (max (0, prefs ['theme']), len (self.themes));
+		self.seticonsize (prefs ['iconsize']);
+		self.settheme (prefs ['theme']);
+		for (var [k, v] of prefs ['showsection'].py_items ()) {
+			self.setshowsection (k, v);
+		}
+		self.prefs = prefs;
+	}, 'load');},
+	get save () {return __get__ (this, function (self) {
+		localStorage.setItem ('prefs', JSON.stringify (self.prefs));
+	}, 'save');},
+	get migrate () {return __get__ (this, function (self, prefs) {
+		var loadiconsize = function () {
+			try {
+				var iconsizestr = localStorage.getItem ('iconsize');
+				if (iconsizestr !== null) {
+					var iconsznum = __mod__ (max (0, int (iconsizestr)), len (self.iconsizes));
+					prefs ['iconsize'] = iconsznum;
+				}
+			}
+			catch (__except0__) {
+				// pass;
+			}
+		};
+		var loadtheme = function () {
+			try {
+				var themestr = localStorage.getItem ('theme');
+				if (themestr !== null) {
+					var themenum = __mod__ (max (0, int (themestr)), len (self.themes));
+					prefs ['theme'] = themenum;
+				}
+			}
+			catch (__except0__) {
+				// pass;
+			}
+		};
+		loadiconsize ();
+		loadtheme ();
+		localStorage.removeItem ('iconsize');
+		localStorage.removeItem ('theme');
+	}, 'migrate');},
+	get toggleshowsection () {return __get__ (this, function (self, secname) {
+		var shown = self.prefs ['showsection'].py_get (secname, self.defaultprefs ['showsection'].py_get (secname, 1));
+		var nshown = (shown == 0 ? 1 : 0);
+		self.setshowsection (secname, nshown);
+	}, 'toggleshowsection');},
+	get setshowsection () {return __get__ (this, function (self, secname, shown) {
+		var old = self.prefs ['showsection'] [secname];
+		var attrname = 'data-hide-' + secname;
+		if (shown) {
+			document.documentElement.removeAttribute (attrname);
+		}
+		else {
+			document.documentElement.setAttribute (attrname, 1);
+		}
+		sih ('show' + secname, (shown == 0 ? 'Off' : 'On'));
+		if (old == shown) {
+			return ;
+		}
+		self.prefs ['showsection'] [secname] = shown;
+		self.save ();
+	}, 'setshowsection');},
 	get toggleiconsize () {return __get__ (this, function (self) {
 		var iconsznum = __mod__ (self.iconsize + 1, len (self.iconsizes));
 		self.seticonsize (iconsznum);
 	}, 'toggleiconsize');},
 	get seticonsize () {return __get__ (this, function (self, iconsznum) {
+		var old = self.iconsize;
 		self.iconsize = iconsznum;
 		var __left0__ = self.iconsizes [iconsznum];
 		var sizename = __left0__ [0];
 		var scale = __left0__ [1];
 		document.documentElement.style.setProperty ('--icon-scale', scale);
-		localStorage.setItem ('iconsize', str (iconsznum));
 		sih ('iconsize', sizename);
+		if (old == iconsznum) {
+			return ;
+		}
+		self.prefs ['iconsize'] = iconsznum;
+		self.save ();
 	}, 'seticonsize');},
 	get toggletheme () {return __get__ (this, function (self) {
 		var themenum = __mod__ (self.theme + 1, len (self.themes));
 		self.settheme (themenum);
 	}, 'toggletheme');},
 	get settheme () {return __get__ (this, function (self, themenum) {
+		var old = self.theme;
 		var themename = self.themes [themenum];
 		self.theme = themenum;
 		document.documentElement.setAttribute ('data-theme', themename.lower ());
 		sih ('theme', themename);
-		localStorage.setItem ('theme', str (themenum));
+		if (old == themenum) {
+			return ;
+		}
+		self.prefs ['theme'] = themenum;
+		self.save ();
 	}, 'settheme');}
 });
 export var Components =  __class__ ('Components', [object], {
@@ -157,7 +222,6 @@ export var Components =  __class__ ('Components', [object], {
 		if (!(self.dirty)) {
 			return ;
 		}
-		console.log ('regen');
 		self.dirty = false;
 		var componentstr = self.tocomponentstr ();
 		if (len (componentstr) < 2) {
@@ -245,7 +309,8 @@ export var TI =  __class__ ('TI', [object], {
 		self.uipref = UIPrefs ();
 		self.components = Components ();
 		self.template = Templates ();
-		var wantedstr = localStorage.getItem ('wanted');
+		self.wantedprofile = ''.join (['wanted', window.location.hash || '']);
+		var wantedstr = localStorage.getItem (self.wantedprofile);
 		if (wantedstr !== null) {
 			self.wanted = set (wantedstr.py_split (','));
 		}
@@ -253,6 +318,7 @@ export var TI =  __class__ ('TI', [object], {
 			self.wanted = set ();
 		}
 		self.combinationfilter = null;
+		self.oneofffilter = null;
 		self.ready = false;
 	}, '__init__');},
 	get setready () {return __get__ (this, function (self) {
@@ -330,6 +396,23 @@ export var TI =  __class__ ('TI', [object], {
 		self.rendercombinations ();
 		self.fixtooltips ();
 	}, 'clearcombfilter');},
+	get setoneofffilter () {return __get__ (this, function (self, filt) {
+		if (filt == self.oneofffilter) {
+			self.clearoneofffilter ();
+			return ;
+		}
+		self.oneofffilter = filt;
+		var tmpl = self.template.py_get ('oneofffilter');
+		sih ('oneofffilter', tmpl.format (__kwargtrans__ ({component: filt})));
+		self.renderoneoff ();
+		self.fixtooltips ();
+	}, 'setoneofffilter');},
+	get clearoneofffilter () {return __get__ (this, function (self) {
+		self.oneofffilter = null;
+		sih ('oneofffilter', '');
+		self.renderoneoff ();
+		self.fixtooltips ();
+	}, 'clearoneofffilter');},
 	get mkwantedoptions () {return __get__ (this, function (self) {
 		if (arguments.length) {
 			var __ilastarg0__ = arguments.length - 1;
@@ -413,7 +496,7 @@ export var TI =  __class__ ('TI', [object], {
 		if (len (self.components.tocomponentstr ()) < 2) {
 			sih ('combinations', '');
 			sih ('buildable', '');
-			self.renderoneoff (dict ({}));
+			self.renderoneoff ();
 			return ;
 		}
 		var tmpl = self.template.py_get ('spare');
@@ -490,10 +573,10 @@ export var TI =  __class__ ('TI', [object], {
 		else {
 		}
 		if (len (self.wanted) > 0) {
-			localStorage.setItem ('wanted', ','.join (self.wanted));
+			localStorage.setItem (self.wantedprofile, ','.join (self.wanted));
 		}
 		else {
-			localStorage.removeItem ('wanted');
+			localStorage.removeItem (self.wantedprofile);
 		}
 		var result = [];
 		for (var c of self.wanted) {
@@ -528,6 +611,7 @@ export var TI =  __class__ ('TI', [object], {
 		else {
 		}
 		var uniqueitems = self.components.uniqueitems;
+		var oof = self.oneofffilter;
 		var oneoff = [];
 		for (var cid1c = 0; cid1c < 8; cid1c++) {
 			var havec1 = self.components.py_get (cid1c);
@@ -586,7 +670,10 @@ export var TI =  __class__ ('TI', [object], {
 				var c1buildable = __left0__ [0];
 				var c2buildable = __left0__ [1];
 			}
-			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (item.score < SCORE_THRESHOLD ? 'showunbuildablefonly lowscore' : 'showunbuildablefonly')})));
+			if (oof !== null && c [1] != oof) {
+				continue;
+			}
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (item.score < SCORE_THRESHOLD ? 'showunbuildablefonly lowscore' : 'showunbuildablefonly'), imgextra: 'onclick=\'ti.ti.setoneofffilter("{0}")\''.format (c [1])})));
 		}
 		sih ('oneoff', ''.join (result));
 	}, 'renderoneoff');},
