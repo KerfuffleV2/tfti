@@ -52,6 +52,13 @@
       </div>
     </script>
 
+    <script type="text/tfti-template" id="template-oneofffilter">
+      <div class="minib">
+        [<b>Filter</b>: <img src="img/{component}.png" class="minib" >]
+      </div>
+    </script>
+
+
     <script type="module">
       import * as ti from "./js/ti.js";
       window.ti = ti;
@@ -97,8 +104,9 @@
     <div id="buildable"></div>
     <div id="oneoffsection">
       <br class="clear">
-      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building">
+      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building; Click item to filter by missing component, click filter to remove">
         <div class="header">One-off:</div>
+        <div id="oneofffilter" onclick="ti.ti.clearoneofffilter()"></div>
       </div>
       <div id="oneoff"></div>
       <br class="clear">
@@ -128,6 +136,9 @@
         </li>
         <li class="footeritem" onclick="ti.ti.uipref.toggleshowsection('oneoff')">
           One-off: <div id="showoneoff">Off</div>
+        </li>
+        <li class="footeritem">
+          <a href="reset.html">Reset</a>
         </li>
     </ul>
   </body>

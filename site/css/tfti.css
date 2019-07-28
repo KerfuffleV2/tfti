@@ -62,7 +62,7 @@ div#clearbutton {
   cursor: pointer;
 }
 
-div#combinationsfilter {
+div#combinationsfilter, div#oneofffilter {
   display: inline-block;
 }
 

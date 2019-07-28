@@ -284,6 +284,7 @@ class TI(object):
     else:
       self.wanted = set()
     self.combinationfilter = None
+    self.oneofffilter = None
     self.ready = False
 
   def setready(self):
@@ -354,6 +355,23 @@ class TI(object):
     sih('combinationsfilter', '')
     self.rendercombinations()
     self.fixtooltips()
+
+  def setoneofffilter(self, filt):
+    if filt == self.oneofffilter:
+      self.clearoneofffilter()
+      return
+    self.oneofffilter = filt
+    tmpl = self.template.get('oneofffilter')
+    sih('oneofffilter', tmpl.format(component = filt))
+    self.renderoneoff()
+    self.fixtooltips()
+
+  def clearoneofffilter(self):
+    self.oneofffilter = None
+    sih('oneofffilter', '')
+    self.renderoneoff()
+    self.fixtooltips()
+
 
   # __pragma__('kwargs')
   def mkwantedoptions(self):
@@ -431,6 +449,7 @@ class TI(object):
 
   def renderoneoff(self):
     uniqueitems = self.components.uniqueitems
+    oof = self.oneofffilter
     oneoff = []
     for cid1c in range(8):
       havec1 = self.components.get(cid1c)
@@ -460,10 +479,13 @@ class TI(object):
       if c2buildable:
         c = (c[1], c[0])
         c1buildable, c2buildable = (c2buildable, c1buildable)
+      if oof is not None and c[1] != oof:
+        continue
       result.append(self.mkcomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
-        imgclass = 'showunbuildablefonly lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildablefonly'
+        imgclass = 'showunbuildablefonly lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildablefonly',
+        imgextra = "onclick='ti.ti.setoneofffilter(\"{0}\")'".format(c[1])
       ))
     sih('oneoff', ''.join(result))
 
