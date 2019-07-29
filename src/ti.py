@@ -545,7 +545,6 @@ class TI(object):
           result.append('<div></div>')
         elif c1 == -1:
           result.append(result.append(ctmpl.format(cid = c2, text = COMPONENT[c2])))
-          continue
         elif c2 == -1:
           result.append(result.append(ctmpl.format(cid = c1, text = COMPONENT[c1])))
         else:
@@ -562,7 +561,6 @@ class TI(object):
           ck = ''.join((c2, c1) if c1 > c2 else (c1, c2))
           item = items.bycombine[ck]
           itemtitle = '{0}: {1}'.format(item.name, item.text)
-          imgclasses = []
           if ck in self.wanted:
             imgclass = 'showwanted'
           elif item.score < SCORE_THRESHOLD:
