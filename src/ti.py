@@ -96,7 +96,7 @@ class UIPrefs(object):
     'ver': 0,
     'theme': 0,
     'iconsize': 0,
-    'showsection': { 'oneoff': 1, 'combinations': 1 }
+    'showsection': { 'oneoff': 1, 'combinations': 1, 'cheatsheet': 0 }
   }
 
   def __init__(self):
@@ -329,6 +329,7 @@ class TI(object):
       self.renderbuildable()
       self.renderoneoff()
       self.rendercombinations()
+      self.rendercheatsheet()
       requestAnimationFrame(self.fixtooltips)
     requestAnimationFrame(go)
 
@@ -530,6 +531,49 @@ class TI(object):
       result.append(tmpl.format(cid = cid, text = COMPONENT[cid]))
     result.append('<br>')
     sih('baseitems', ''.join(result))
+
+  def rendercheatsheet(self):
+    result = []
+    ctmpl = self.template.get('cheatsheet-component')
+    itmpl = self.template.get('item-with-components')
+    for c1 in range(-1, 8):
+      for c2 in range(-1, 8):
+        if c1 == -1 and c2 == -1:
+          result.append('<div></div>')
+        elif c1 == -1:
+          result.append(result.append(ctmpl.format(cid = c2, text = COMPONENT[c2])))
+          continue
+        elif c2 == -1:
+          result.append(result.append(ctmpl.format(cid = c1, text = COMPONENT[c1])))
+        else:
+          c1name = COMPONENT[c1]
+          c2name = COMPONENT[c2]
+          havec1 = self.components.get(c1)
+          havec2 = self.components.get(c2)
+          if c1 == c2:
+            c1buildable = havec1 > 0
+            c2buildable = havec2 > 1
+          else:
+            c1buildable = havec1 > 0
+            c2buildable = havec2 > 0
+          ck = ''.join((c2, c1) if c1 > c2 else (c1, c2))
+          item = items.bycombine[ck]
+          itemtitle = '{0}: {1}'.format(item.name, item.text)
+          imgclasses = []
+          if ck in self.wanted:
+            imgclass = 'showwanted'
+          elif item.score < SCORE_THRESHOLD:
+            imgclass= 'lowscore'
+          else:
+            imgclass = ''
+          minitclass = 'showunbuildable' if not c1buildable else ''
+          minibclass = 'showunbuildable' if not c2buildable else ''
+          result.append(itmpl.format(
+            cid1 = c1, cid2 = c2, combine = ck, c1name = c1name, c2name = c2name,
+            itemtitle = itemtitle, imgextra = '',
+            imgclass = imgclass, minitclass = minitclass, minibclass = minibclass))
+    sih('cheatsheet', ''.join(result))
+
   # __pragma__('nokwargs')
 
 

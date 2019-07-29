@@ -58,6 +58,14 @@
       </div>
     </script>
 
+    <script type="text/tfti-template" id="template-cheatsheet-component">
+      <div>
+        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{text}">
+          <img src="img/{cid}.png">
+        </div>
+      </div>
+    </script>
+
 
     <script type="module">
       import * as ti from "./js/ti.js";
@@ -69,6 +77,19 @@
     <link rel="stylesheet" type="text/css" href="./css/tfti.css" media="all">
   </head>
   <body>
+    <div id="menu">
+      <ul class="menu">
+        <li class="menuitem" onclick="ti.ti.uipref.toggleshowsection('combinations')">
+          Combinations: <div id="showcombinations">On</div>
+        </li>
+        <li class="menuitem" onclick="ti.ti.uipref.toggleshowsection('oneoff')">
+          One-off: <div id="showoneoff">On</div>
+        </li>
+        <li class="menuitem" onclick="ti.ti.uipref.toggleshowsection('cheatsheet')">
+          Cheatsheet: <div id="showcheatsheet">Off</div>
+        </li>
+    </ul>
+    <hr>
     <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="down-left" aria-label="Click component to add">
       <div class="header">Shop:</div>
     </div>
@@ -117,27 +138,29 @@
         <div class="header">Combinations:</div>
         <div id="combinationsfilter" onclick="ti.ti.clearcombfilter()"></div>
       </div>
-      <div id="combinations" class="combogrid"></div>
+      <div id="combinations"></div>
       <br class="clear">
     </div>
+    <div id="cheatsheetsection">
+      <hr>
+      <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="No actions currently">
+        <div class="header">Cheatsheet:</div>
+      </div>
+      <br class="clear">
+      <div id="cheatsheet"></div>
+    </div>
     <hr>
-    <div id="footer">
-      <ul class="footer">
-        <li class="footeritem">by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></li>
-        <li class="footeritem"><a href="https://github.com/KerfuffleV2/tfti#readme">Help</a></li>
-        <li class="footeritem" onclick="ti.ti.uipref.toggleiconsize()">
+    <div id="menu">
+      <ul class="menu">
+        <li class="menuitem">by <a href="https://github.com/KerfuffleV2">Kerfuffle</a></li>
+        <li class="menuitem"><a href="https://github.com/KerfuffleV2/tfti#readme">Help</a></li>
+        <li class="menuitem" onclick="ti.ti.uipref.toggleiconsize()">
           Icon size: <div id="iconsize">Medium</div>
         </li>
-        <li class="footeritem" onclick="ti.ti.uipref.toggletheme()">
+        <li class="menuitem" onclick="ti.ti.uipref.toggletheme()">
           Theme: <div id="theme">Dark</div>
         </li>
-        <li class="footeritem" onclick="ti.ti.uipref.toggleshowsection('combinations')">
-          Combinations: <div id="showcombinations">On</div>
-        </li>
-        <li class="footeritem" onclick="ti.ti.uipref.toggleshowsection('oneoff')">
-          One-off: <div id="showoneoff">Off</div>
-        </li>
-        <li class="footeritem">
+        <li class="menuitem">
           <a href="reset.html">Reset</a>
         </li>
     </ul>
