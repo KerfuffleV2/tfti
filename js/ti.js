@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-29 02:59:37
+// Transcrypt'ed from Python, 2019-07-29 16:13:16
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -86,7 +86,7 @@ export var UIPrefs =  __class__ ('UIPrefs', [object], {
 	__module__: __name__,
 	themes: tuple (['Dark', 'Light']),
 	iconsizes: tuple ([tuple (['Medium', '0.75']), tuple (['Large', '1.0']), tuple (['Small', '0.5'])]),
-	defaultprefs: dict ({'ver': 0, 'theme': 0, 'iconsize': 0, 'showsection': dict ({'oneoff': 1, 'combinations': 1})}),
+	defaultprefs: dict ({'ver': 0, 'theme': 0, 'iconsize': 0, 'showsection': dict ({'oneoff': 1, 'combinations': 1, 'cheatsheet': 0})}),
 	get __init__ () {return __get__ (this, function (self) {
 		self.prefs = self.defaultprefs;
 		self.load ();
@@ -357,6 +357,7 @@ export var TI =  __class__ ('TI', [object], {
 			self.renderbuildable ();
 			self.renderoneoff ();
 			self.rendercombinations ();
+			self.rendercheatsheet ();
 			requestAnimationFrame (self.fixtooltips);
 		};
 		requestAnimationFrame (go);
@@ -793,6 +794,69 @@ export var TI =  __class__ ('TI', [object], {
 		result.append ('<br>');
 		sih ('baseitems', ''.join (result));
 	}, 'rendershop');},
+	get rendercheatsheet () {return __get__ (this, function (self) {
+		if (arguments.length) {
+			var __ilastarg0__ = arguments.length - 1;
+			if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
+				var __allkwargs0__ = arguments [__ilastarg0__--];
+				for (var __attrib0__ in __allkwargs0__) {
+					switch (__attrib0__) {
+						case 'self': var self = __allkwargs0__ [__attrib0__]; break;
+					}
+				}
+			}
+		}
+		else {
+		}
+		var result = [];
+		var ctmpl = self.template.py_get ('cheatsheet-component');
+		var itmpl = self.template.py_get ('item-with-components');
+		for (var c1 = -(1); c1 < 8; c1++) {
+			for (var c2 = -(1); c2 < 8; c2++) {
+				if (c1 == -(1) && c2 == -(1)) {
+					result.append ('<div></div>');
+				}
+				else if (c1 == -(1)) {
+					result.append (result.append (ctmpl.format (__kwargtrans__ ({cid: c2, text: COMPONENT [c2]}))));
+					continue;
+				}
+				else if (c2 == -(1)) {
+					result.append (result.append (ctmpl.format (__kwargtrans__ ({cid: c1, text: COMPONENT [c1]}))));
+				}
+				else {
+					var c1name = COMPONENT [c1];
+					var c2name = COMPONENT [c2];
+					var havec1 = self.components.py_get (c1);
+					var havec2 = self.components.py_get (c2);
+					if (c1 == c2) {
+						var c1buildable = havec1 > 0;
+						var c2buildable = havec2 > 1;
+					}
+					else {
+						var c1buildable = havec1 > 0;
+						var c2buildable = havec2 > 0;
+					}
+					var ck = ''.join ((c1 > c2 ? tuple ([c2, c1]) : tuple ([c1, c2])));
+					var item = py_items.bycombine [ck];
+					var itemtitle = '{0}: {1}'.format (item.py_name, item.text);
+					var imgclasses = [];
+					if (__in__ (ck, self.wanted)) {
+						var imgclass = 'showwanted';
+					}
+					else if (item.score < SCORE_THRESHOLD) {
+						var imgclass = 'lowscore';
+					}
+					else {
+						var imgclass = '';
+					}
+					var minitclass = (!(c1buildable) ? 'showunbuildable' : '');
+					var minibclass = (!(c2buildable) ? 'showunbuildable' : '');
+					result.append (itmpl.format (__kwargtrans__ ({cid1: c1, cid2: c2, combine: ck, c1name: c1name, c2name: c2name, itemtitle: itemtitle, imgextra: '', imgclass: imgclass, minitclass: minitclass, minibclass: minibclass})));
+				}
+			}
+		}
+		sih ('cheatsheet', ''.join (result));
+	}, 'rendercheatsheet');},
 	get fixtooltips () {return __get__ (this, function (self) {
 		var width = window.innerWidth;
 		var tofix = [];
