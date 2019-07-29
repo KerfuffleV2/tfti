@@ -77,6 +77,11 @@ img.showunbuildable {
   outline: var(--unbuildable-outline);
   outline-offset: var(--unbuildable-outline-offset);
 }
+img.showwanted {
+  outline: 2px solid #08f;
+  outline-offset: -2px;
+  filter: saturate(120%) brightness(110%);
+}
 img.lowscore { opacity: 0.7; }
 div.spare {
   display: inline-block;

@@ -34,6 +34,9 @@ class Item(object):
     self.name = itemj['name']
     self.score = itemj['score']
 
+  def adjustedscore(self, wanted):
+    return self.score + (5.0 if self.combine in wanted else 0.0)
+
   def __str__(self):
     return '<Item combine={0} score={1} name=[{2}] text=[{3}]'.format(self.combine, self.score, self.name, self.text)
 
@@ -210,7 +213,7 @@ class Components(object):
     self.uniqueitems = {}
     self.combinations = []
 
-  def sync(self):
+  def sync(self, wanted):
     if not self.dirty:
       return
     self.dirty = False
@@ -224,8 +227,7 @@ class Components(object):
     up = mkcombinations(tuple(componentstr))
     uniqueitems = {}
     result = []
-    for (pi, spare) in sorted(up, reverse = True, key = lambda ps: sum(i.score for i in ps[0])):
-      pi = list(sorted(pi, reverse = True, key = lambda i: (i.score, i.name)))
+    for (pi, spare) in up:
       result.append((pi, spare))
       for thisitem in pi:
         uniqueitems[thisitem.combine] = thisitem
@@ -335,13 +337,11 @@ class TI(object):
       return
     self.wanted.add(thisarg.value)
     thisarg.value = ''
-    self.renderwanted()
-    self.fixtooltips()
+    self.render()
 
   def delwanted(self, c):
     self.wanted.remove(c)
-    self.renderwanted()
-    self.fixtooltips()
+    self.render()
 
   def setcombfilter(self, filt):
     self.combinationfilter = filt
@@ -402,13 +402,20 @@ class TI(object):
       self.renderoneoff()
       return
     tmpl = self.template.get('spare')
-    for (pi, spare) in self.components.combinations:
+    sortedcombinations = sorted(self.components.combinations, reverse = True, key = lambda ps: sum(i.adjustedscore(self.wanted) for i in ps[0]))
+    for (pi, spare) in sortedcombinations:
       if self.combinationfilter is not None and not any(i.combine == self.combinationfilter for i in pi):
           continue
+      pi = list(sorted(pi, reverse = True, key = lambda i: (i.adjustedscore(self.wanted), i.name)))
       result.append('<div class="combinationscontainer">')
       for thisitem in pi:
+        iclass = []
+        if thisitem.combine in self.wanted:
+          iclass.append('showwanted')
+        elif thisitem.score < SCORE_THRESHOLD:
+          iclass.append('lowscore')
         result.append(self.mkcomponentstr(thisitem.combine[0], thisitem.combine[1],
-          imgclass = 'lowscore' if thisitem.score < SCORE_THRESHOLD else '',
+          imgclass = ' '.join(iclass),
           imgextra = 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format(thisitem.combine)))
       if spare is not None:
         result.append(tmpl.format(sparecid = spare, text = COMPONENT[int(spare)]))
@@ -418,10 +425,15 @@ class TI(object):
   def renderbuildable(self):
     uniqueitems = self.components.uniqueitems
     result = []
-    for item in sorted(uniqueitems.values(), reverse = True, key = lambda i: i.score):
+    for item in sorted(uniqueitems.values(), reverse = True, key = lambda i: i.adjustedscore(self.wanted)):
       c = item.combine
+      iclass = []
+      if item.combine in self.wanted:
+        iclass.append('showwanted')
+      elif item.score < SCORE_THRESHOLD:
+        iclass.append('lowscore')
       result.append(self.mkcomponentstr(c[0], c[1], imgextra="onclick=\"ti.ti.decitem('{0}')\"".format(c),
-        imgclass = 'lowscore' if item.score < SCORE_THRESHOLD else ''))
+        imgclass = ' '.join(iclass)))
     sih('buildable', ''.join(result))
 
   def renderwanted(self):
@@ -478,17 +490,22 @@ class TI(object):
             continue
         oneoff.append((c1buildable, c2buildable, items.bycombine[ck]))
     result = []
-    for c1buildable, c2buildable, item in sorted(oneoff, reverse = True, key = lambda i: i[2].score):
+    for c1buildable, c2buildable, item in sorted(oneoff, reverse = True, key = lambda i: i[2].adjustedscore(self.wanted)):
       c = item.combine
       if c2buildable:
         c = (c[1], c[0])
         c1buildable, c2buildable = (c2buildable, c1buildable)
       if oof is not None and c[1] != oof:
         continue
+      iclass = ['showunbuildablefonly']
+      if item.combine in self.wanted:
+        iclass.append('showwanted')
+      elif item.score < SCORE_THRESHOLD:
+        iclass.append('lowscore')
       result.append(self.mkcomponentstr(c[0], c[1],
         minitclass = 'showunbuildable' if not c1buildable else '',
         minibclass = 'showunbuildable' if not c2buildable else '',
-        imgclass = 'showunbuildablefonly lowscore' if item.score < SCORE_THRESHOLD else 'showunbuildablefonly',
+        imgclass = ' '.join(iclass),
         imgextra = "onclick='ti.ti.setoneofffilter(\"{0}\")'".format(c[1])
       ))
     sih('oneoff', ''.join(result))
