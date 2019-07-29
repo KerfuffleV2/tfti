@@ -116,7 +116,10 @@ class UIPrefs(object):
     prefs['theme'] = max(0, prefs['theme']) % len(self.themes)
     self.seticonsize(prefs['iconsize'])
     self.settheme(prefs['theme'])
-    for k,v in prefs['showsection'].items():
+    dpshowsection = self.defaultprefs['showsection']
+    pshowsection = prefs['showsection']
+    for k in dpshowsection.keys():
+      v = pshowsection.get(k, dpshowsection[k])
       self.setshowsection(k,v)
     self.prefs = prefs
 
