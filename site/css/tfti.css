@@ -23,6 +23,8 @@
   --dropdown-background: #223;
   --unbuildable-outline: 1px solid #f00;
   --unbuildable-outline-offset: -1px;
+  --wanted-outline: 1px solid #08f;
+  --wanted-outline-offset: -1px;
 }
 
 [data-theme="light"] {
@@ -34,6 +36,8 @@
   --dropdown-background: var(--border-color);
   --unbuildable-outline: 2px solid #f00;
   --unbuildable-outline-offset: -2px;
+  --wanted-outline: 2px solid #08f;
+  --wanted-outline-offset: -2px;
 }
 
 * { box-sizing: border-box; }
@@ -78,8 +82,8 @@ img.showunbuildable {
   outline-offset: var(--unbuildable-outline-offset);
 }
 img.showwanted {
-  outline: 2px solid #08f;
-  outline-offset: -2px;
+  outline: var(--wanted-outline);
+  outline-offset: var(--wanted-outline-offset);
   filter: saturate(120%) brightness(110%);
 }
 img.lowscore { opacity: 0.7; }
@@ -125,6 +129,7 @@ div.combinationscontainer {
 
 :root[data-hide-combinations="1"] div#combinationsection { display: none; }
 :root[data-hide-oneoff="1"] div#oneoffsection { display: none; }
+:root[data-hide-cheatsheet="1"] div#cheatsheetsection { display: none; }
 
 div.combogrid {
   display: grid;
