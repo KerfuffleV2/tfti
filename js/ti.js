@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-28 06:58:40
+// Transcrypt'ed from Python, 2019-07-29 02:59:37
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -12,6 +12,9 @@ export var Item =  __class__ ('Item', [object], {
 		self.py_name = itemj ['name'];
 		self.score = itemj ['score'];
 	}, '__init__');},
+	get adjustedscore () {return __get__ (this, function (self, wanted) {
+		return self.score + (__in__ (self.combine, wanted) ? 5.0 : 0.0);
+	}, 'adjustedscore');},
 	get __str__ () {return __get__ (this, function (self) {
 		return '<Item combine={0} score={1} name=[{2}] text=[{3}]'.format (self.combine, self.score, self.py_name, self.text);
 	}, '__str__');}
@@ -218,7 +221,7 @@ export var Components =  __class__ ('Components', [object], {
 		self.uniqueitems = dict ({});
 		self.combinations = [];
 	}, 'clear');},
-	get sync () {return __get__ (this, function (self) {
+	get sync () {return __get__ (this, function (self, wanted) {
 		if (!(self.dirty)) {
 			return ;
 		}
@@ -235,18 +238,7 @@ export var Components =  __class__ ('Components', [object], {
 		var up = mkcombinations (tuple (componentstr));
 		var uniqueitems = dict ({});
 		var result = [];
-		for (var [pi, spare] of sorted (up, __kwargtrans__ ({reverse: true, key: (function __lambda__ (ps) {
-			return sum ((function () {
-				var __accu0__ = [];
-				for (var i of ps [0]) {
-					__accu0__.append (i.score);
-				}
-				return py_iter (__accu0__);
-			}) ());
-		})}))) {
-			var pi = list (sorted (pi, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
-				return tuple ([i.score, i.py_name]);
-			})})));
+		for (var [pi, spare] of up) {
 			result.append (tuple ([pi, spare]));
 			for (var thisitem of pi) {
 				uniqueitems [thisitem.combine] = thisitem;
@@ -375,13 +367,11 @@ export var TI =  __class__ ('TI', [object], {
 		}
 		self.wanted.add (thisarg.value);
 		thisarg.value = '';
-		self.renderwanted ();
-		self.fixtooltips ();
+		self.render ();
 	}, 'setwanted');},
 	get delwanted () {return __get__ (this, function (self, c) {
 		self.wanted.remove (c);
-		self.renderwanted ();
-		self.fixtooltips ();
+		self.render ();
 	}, 'delwanted');},
 	get setcombfilter () {return __get__ (this, function (self, filt) {
 		self.combinationfilter = filt;
@@ -500,7 +490,29 @@ export var TI =  __class__ ('TI', [object], {
 			return ;
 		}
 		var tmpl = self.template.py_get ('spare');
-		for (var [pi, spare] of self.components.combinations) {
+		var sortedcombinations = sorted (self.components.combinations, __kwargtrans__ ({reverse: true, key: (function __lambda__ (ps) {
+			if (arguments.length) {
+				var __ilastarg0__ = arguments.length - 1;
+				if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
+					var __allkwargs0__ = arguments [__ilastarg0__--];
+					for (var __attrib0__ in __allkwargs0__) {
+						switch (__attrib0__) {
+							case 'ps': var ps = __allkwargs0__ [__attrib0__]; break;
+						}
+					}
+				}
+			}
+			else {
+			}
+			return sum ((function () {
+				var __accu0__ = [];
+				for (var i of ps [0]) {
+					__accu0__.append (i.adjustedscore (self.wanted));
+				}
+				return py_iter (__accu0__);
+			}) ());
+		})}));
+		for (var [pi, spare] of sortedcombinations) {
 			if (self.combinationfilter !== null && !(any ((function () {
 				var __accu0__ = [];
 				for (var i of pi) {
@@ -510,9 +522,32 @@ export var TI =  __class__ ('TI', [object], {
 			}) ()))) {
 				continue;
 			}
+			var pi = list (sorted (pi, __kwargtrans__ ({reverse: true, key: (function __lambda__ (i) {
+				if (arguments.length) {
+					var __ilastarg0__ = arguments.length - 1;
+					if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
+						var __allkwargs0__ = arguments [__ilastarg0__--];
+						for (var __attrib0__ in __allkwargs0__) {
+							switch (__attrib0__) {
+								case 'i': var i = __allkwargs0__ [__attrib0__]; break;
+							}
+						}
+					}
+				}
+				else {
+				}
+				return tuple ([i.adjustedscore (self.wanted), i.py_name]);
+			})})));
 			result.append ('<div class="combinationscontainer">');
 			for (var thisitem of pi) {
-				result.append (self.mkcomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: (thisitem.score < SCORE_THRESHOLD ? 'lowscore' : ''), imgextra: 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format (thisitem.combine)})));
+				var iclass = [];
+				if (__in__ (thisitem.combine, self.wanted)) {
+					iclass.append ('showwanted');
+				}
+				else if (thisitem.score < SCORE_THRESHOLD) {
+					iclass.append ('lowscore');
+				}
+				result.append (self.mkcomponentstr (thisitem.combine [0], thisitem.combine [1], __kwargtrans__ ({imgclass: ' '.join (iclass), imgextra: 'onclick="ti.ti.setcombfilter(\'{0}\')"'.format (thisitem.combine)})));
 			}
 			if (spare !== null) {
 				result.append (tmpl.format (__kwargtrans__ ({sparecid: spare, text: COMPONENT [int (spare)]})));
@@ -551,10 +586,17 @@ export var TI =  __class__ ('TI', [object], {
 			}
 			else {
 			}
-			return i.score;
+			return i.adjustedscore (self.wanted);
 		})}))) {
 			var c = item.combine;
-			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({imgextra: 'onclick="ti.ti.decitem(\'{0}\')"'.format (c), imgclass: (item.score < SCORE_THRESHOLD ? 'lowscore' : '')})));
+			var iclass = [];
+			if (__in__ (item.combine, self.wanted)) {
+				iclass.append ('showwanted');
+			}
+			else if (item.score < SCORE_THRESHOLD) {
+				iclass.append ('lowscore');
+			}
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({imgextra: 'onclick="ti.ti.decitem(\'{0}\')"'.format (c), imgclass: ' '.join (iclass)})));
 		}
 		sih ('buildable', ''.join (result));
 	}, 'renderbuildable');},
@@ -667,7 +709,7 @@ export var TI =  __class__ ('TI', [object], {
 			}
 			else {
 			}
-			return i [2].score;
+			return i [2].adjustedscore (self.wanted);
 		})}))) {
 			var c = item.combine;
 			if (c2buildable) {
@@ -679,7 +721,14 @@ export var TI =  __class__ ('TI', [object], {
 			if (oof !== null && c [1] != oof) {
 				continue;
 			}
-			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: (item.score < SCORE_THRESHOLD ? 'showunbuildablefonly lowscore' : 'showunbuildablefonly'), imgextra: 'onclick=\'ti.ti.setoneofffilter("{0}")\''.format (c [1])})));
+			var iclass = ['showunbuildablefonly'];
+			if (__in__ (item.combine, self.wanted)) {
+				iclass.append ('showwanted');
+			}
+			else if (item.score < SCORE_THRESHOLD) {
+				iclass.append ('lowscore');
+			}
+			result.append (self.mkcomponentstr (c [0], c [1], __kwargtrans__ ({minitclass: (!(c1buildable) ? 'showunbuildable' : ''), minibclass: (!(c2buildable) ? 'showunbuildable' : ''), imgclass: ' '.join (iclass), imgextra: 'onclick=\'ti.ti.setoneofffilter("{0}")\''.format (c [1])})));
 		}
 		sih ('oneoff', ''.join (result));
 	}, 'renderoneoff');},
