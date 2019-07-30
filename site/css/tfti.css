@@ -23,8 +23,12 @@
   --dropdown-background: #223;
   --unbuildable-outline: 1px solid #f00;
   --unbuildable-outline-offset: -1px;
-  --wanted-outline: 1px solid #08f;
-  --wanted-outline-offset: -1px;
+  --wanted-outline: 2px solid #08f;
+  --wanted-outline-offset: -2px;
+  --buildable-outline: 2px solid #0e6;
+  --buildable-outline-offset: -2px;
+  --oneoff-outline: 2px solid #cc0;
+  --oneoff-outline-offset: -2px;
 }
 
 [data-theme="light"] {
@@ -85,6 +89,14 @@ img.showwanted {
   outline: var(--wanted-outline);
   outline-offset: var(--wanted-outline-offset);
   filter: saturate(120%) brightness(110%);
+}
+img.showbuildable {
+  outline: var(--buildable-outline);
+  outline-offset: var(--buildable-outline-offset);
+}
+img.showoneoff {
+  outline: var(--oneoff-outline);
+  outline-offset: var(--oneoff-outline-offset);
 }
 img.lowscore { opacity: 0.7; }
 div.spare {

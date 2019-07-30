@@ -561,18 +561,23 @@ class TI(object):
           ck = ''.join((c2, c1) if c1 > c2 else (c1, c2))
           item = items.bycombine[ck]
           itemtitle = '{0}: {1}'.format(item.name, item.text)
-          if ck in self.wanted:
-            imgclass = 'showwanted'
-          elif item.score < SCORE_THRESHOLD:
-            imgclass= 'lowscore'
-          else:
-            imgclass = ''
+          iswanted = ck in self.wanted
+          imgclasses = []
+          if c1buildable and c2buildable:
+            imgclasses.append('showbuildable')
+          elif (c1buildable and not c2buildable) or (c2buildable and not c1buildable):
+            imgclasses.append('showoneoff')
+          elif iswanted:
+            imgclasses.append('showwanted')
+          if not iswanted and item.score < SCORE_THRESHOLD:
+            imgclasses.append('lowscore')
+
           minitclass = 'showunbuildable' if not c1buildable else ''
           minibclass = 'showunbuildable' if not c2buildable else ''
           result.append(itmpl.format(
             cid1 = c1, cid2 = c2, combine = ck, c1name = c1name, c2name = c2name,
             itemtitle = itemtitle, imgextra = '',
-            imgclass = imgclass, minitclass = minitclass, minibclass = minibclass))
+            imgclass = ' '.join(imgclasses), minitclass = minitclass, minibclass = minibclass))
     sih('cheatsheet', ''.join(result))
 
   # __pragma__('nokwargs')
