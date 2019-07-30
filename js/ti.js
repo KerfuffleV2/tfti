@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-07-29 16:31:07
+// Transcrypt'ed from Python, 2019-07-30 02:04:10
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, format, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var SCORE_THRESHOLD = 3;
@@ -821,7 +821,6 @@ export var TI =  __class__ ('TI', [object], {
 				}
 				else if (c1 == -(1)) {
 					result.append (result.append (ctmpl.format (__kwargtrans__ ({cid: c2, text: COMPONENT [c2]}))));
-					continue;
 				}
 				else if (c2 == -(1)) {
 					result.append (result.append (ctmpl.format (__kwargtrans__ ({cid: c1, text: COMPONENT [c1]}))));
@@ -842,19 +841,23 @@ export var TI =  __class__ ('TI', [object], {
 					var ck = ''.join ((c1 > c2 ? tuple ([c2, c1]) : tuple ([c1, c2])));
 					var item = py_items.bycombine [ck];
 					var itemtitle = '{0}: {1}'.format (item.py_name, item.text);
+					var iswanted = __in__ (ck, self.wanted);
 					var imgclasses = [];
-					if (__in__ (ck, self.wanted)) {
-						var imgclass = 'showwanted';
+					if (c1buildable && c2buildable) {
+						imgclasses.append ('showbuildable');
 					}
-					else if (item.score < SCORE_THRESHOLD) {
-						var imgclass = 'lowscore';
+					else if (c1buildable && !(c2buildable) || c2buildable && !(c1buildable)) {
+						imgclasses.append ('showoneoff');
 					}
-					else {
-						var imgclass = '';
+					else if (iswanted) {
+						imgclasses.append ('showwanted');
+					}
+					if (!(iswanted) && item.score < SCORE_THRESHOLD) {
+						imgclasses.append ('lowscore');
 					}
 					var minitclass = (!(c1buildable) ? 'showunbuildable' : '');
 					var minibclass = (!(c2buildable) ? 'showunbuildable' : '');
-					result.append (itmpl.format (__kwargtrans__ ({cid1: c1, cid2: c2, combine: ck, c1name: c1name, c2name: c2name, itemtitle: itemtitle, imgextra: '', imgclass: imgclass, minitclass: minitclass, minibclass: minibclass})));
+					result.append (itmpl.format (__kwargtrans__ ({cid1: c1, cid2: c2, combine: ck, c1name: c1name, c2name: c2name, itemtitle: itemtitle, imgextra: '', imgclass: ' '.join (imgclasses), minitclass: minitclass, minibclass: minibclass})));
 				}
 			}
 		}
