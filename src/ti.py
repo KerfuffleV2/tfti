@@ -544,9 +544,9 @@ class TI(object):
         if c1 == -1 and c2 == -1:
           result.append('<div></div>')
         elif c1 == -1:
-          result.append(result.append(ctmpl.format(cid = c2, text = COMPONENT[c2])))
+          result.append(ctmpl.format(cid = c2, text = COMPONENT[c2]))
         elif c2 == -1:
-          result.append(result.append(ctmpl.format(cid = c1, text = COMPONENT[c1])))
+          result.append(ctmpl.format(cid = c1, text = COMPONENT[c1]))
         else:
           c1name = COMPONENT[c1]
           c2name = COMPONENT[c2]
@@ -571,7 +571,6 @@ class TI(object):
             imgclasses.append('showwanted')
           if not iswanted and item.score < SCORE_THRESHOLD:
             imgclasses.append('lowscore')
-
           minitclass = 'showunbuildable' if not c1buildable else ''
           minibclass = 'showunbuildable' if not c2buildable else ''
           result.append(itmpl.format(
