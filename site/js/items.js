@@ -62,7 +62,7 @@ var ITEMS =
   },
   {
     "comp": "13",
-    "desc": "Every 3rd attack deals 100 splash magic damage to up to 3 targets.",
+    "desc": "Every 3rd attack deals 90 splash magic damage to up to 3 targets.",
     "name": "Statikk Shiv",
     "score": 3
   },
@@ -104,13 +104,13 @@ var ITEMS =
   },
   {
     "comp": "24",
-    "desc": "On combat start, shields wearer and allies 2 spaces to left and right for 200.",
+    "desc": "On combat start, wearer and allies 2 spaces to left and right gain a 4sec shield of 200.",
     "name": "Locket of the Iron Solari",
     "score": 3.5
   },
   {
     "comp": "25",
-    "desc": "Whenever an enemy casts a spell they take 200 true damage.",
+    "desc": "Whenever an enemy casts a spell they take 150 true damage.",
     "name": "Ionic Spark",
     "score": 3
   },
@@ -140,7 +140,7 @@ var ITEMS =
   },
   {
     "comp": "35",
-    "desc": "Attacks have a 50% chance to Silence.",
+    "desc": "Attacks have a 50% chance to Silence for 3 seconds.",
     "name": "Hush",
     "score": 3
   },
