@@ -112,8 +112,8 @@ div.spare {
 }
 img { width: var(--item-size); height: var(--item-size); }
 img.spare { opacity: 0.6; }
-img.minit { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
-img.minib { height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
+img.minit { position: absolute; left: 0; top: 0; height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
+img.minib { position: absolute; left: 0; top: 0; height: var(--mini-size); width: var(--mini-size); opacity: 0.9; }
 div.minit { grid-area: minit; }
 div.minib { grid-area: minib; }
 
