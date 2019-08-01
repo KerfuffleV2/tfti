@@ -3,8 +3,8 @@
   --mini-size: calc(32px * var(--icon-scale));
   --item-size: calc(64px * var(--icon-scale));
   --item-mini-size: calc(var(--item-size) + var(--mini-size));
-  --pad-size: 4px;
-  --gap-size: 6px;
+  --pad-size: calc(4px * var(--icon-scale));
+  --gap-size: calc(4px * var(--icon-scale));
   --col-size: calc(var(--item-mini-size) + (var(--pad-size) * 2));
   --row-size: calc(var(--item-size) + (var(--pad-size) * 2));
 
@@ -13,7 +13,7 @@
   --unbuildablefilter: saturate(60%);
 
   --balloon-color: #335;
-  --balloon-font-size: 16px;
+  --balloon-font-size: min(12px, calc(20px * var(--icon-scale)));
 
   --background-color: #000;
   --border-color: #557;
@@ -45,9 +45,16 @@
 }
 
 * { box-sizing: border-box; }
+div { display: inline; padding: 0px; }
 
 body { background-color: var(--background-color); color: var(--header-color); }
-hr { border: 1px solid var(--border-color); }
+hr {
+  border: 1px solid var(--border-color);
+  padding: 0px;
+  margin: calc(6px * var(--icon-scale));
+  margin-left: 0px;
+  margin-right: 0px;
+}
 
 div.headercontainer {
   display: inline-block;
@@ -56,9 +63,9 @@ div.headercontainer {
 div.header {
   display: inline-block;
   color: var(--header-color);
-  font-size: 1.8em;
+  font-size: calc(2em * var(--icon-scale));
   font-variant: small-caps;
-  padding-bottom: 6px;
+  padding-bottom: calc(6px * var(--icon-scale));
   cursor: help;
 
 }
@@ -132,7 +139,7 @@ div.combitem {
 div.combinationscontainer {
   display: grid;
   align-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--col-size), auto));
   grid-gap: var(--gap-size);
   border: 2px solid var(--border-color);
   padding: var(--pad-size);
@@ -147,7 +154,7 @@ div.combinationscontainer {
 
 div#cheatsheet {
   display: inline-grid;
-  grid-template-columns: 64px repeat(8, var(--col-size));
+  grid-template-columns: repeat(9, var(--col-size));
   grid-template-rows: repeat(9, var(--row-size));
   grid-gap: 4px;
   padding: 0px;
@@ -159,31 +166,49 @@ div#combinations {
   grid-template-columns: repeat(auto-fill, minmax(var(--col-size), 1fr));
   grid-gap: var(--gap-size);
 }
+
 div#havewant {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto auto;
   grid-template-areas:
     "hheader wheader"
     "hitems  witems";
 }
 
+@media screen and (max-width: 600px) {
+  div#havewant {
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "hheader"
+      "hitems"
+      "wheader"
+      "witems";
+  }
+
+}
+#hheader { grid-area: hheader; }
+#wheader { grid-area: wheader; }
+#hitems { grid-area: hitems; }
+#wanted { grid-area: witems; }
+
 #baseitems, #items, #buildable, #wanted, #oneoff {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-size), auto));
   grid-gap: var(--gap-size);
   min-height: calc(var(--item-size) + var(--pad-size));
 }
 div#wanted {
   float: left;
   grid-gap: calc(var(--gap-size) * 0.66);
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), auto));
 }
 div#buildable, div#oneoff {
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-mini-size), auto));
 }
 
-div#menu { padding-top: .5em; }
+div#menu { padding-top: 2px; }
 
 ul.menu {
   list-style-type: none;
@@ -193,8 +218,9 @@ ul.menu {
 }
 li.menuitem {
   display: inline;
+  font-size: calc(20px * var(--icon-scale));
   border-right: 2px solid var(--border-color);
-  padding: 6px;
+  padding: calc(8px * var(--icon-scale));
 }
 li.menuitem:last-child { border-right: none; }
 li.menuitem div {
@@ -214,7 +240,7 @@ li.menuitem a {
 }
 
 
-br.clear { clear: both; }
+div.clear { display: block; width: 100%; clear: both; padding: 0px; margin: 0px; }
 
 .cselect {
   display: inline-block;
@@ -223,7 +249,7 @@ br.clear { clear: both; }
 	font-weight: 700;
 	color: var(--dropdown-background);
 	line-height: 1.3;
-	padding: .6em 1.4em .5em .8em;
+  padding: 2px;
 	width: auto;
 	max-width: 100%;
 	margin: 0;

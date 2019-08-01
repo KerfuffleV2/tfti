@@ -91,7 +91,7 @@ def sih(k, v):
 
 class UIPrefs(object):
   themes = ('Dark', 'Light')
-  iconsizes = (('Medium', '0.75'), ('Large', '1.0'), ('Small', '0.5'))
+  iconsizes = (('Medium', '0.75'), ('Large', '1.0'), ('Small', '0.5'), ('Tiny', '0.4'))
   defaultprefs = {
     'ver': 0,
     'theme': 0,
