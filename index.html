@@ -67,8 +67,8 @@
     </script>
 
     <script type="text/tfti-template" id="template-cheatsheet-component">
-      <div>
-        <div class="baseitem fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{text}">
+      <div class="component">
+        <div class="baseitem item fixtip" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="{text}">
           <img src="img/{cid}.png">
         </div>
       </div>
@@ -104,7 +104,7 @@
     <div id="baseitems"></div>
     <hr>
     <div id="havewant">
-      <div>
+      <div id="hheader">
         <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Click component to remove, click ✗ to clear">
           <div class="header" >
             Have:
@@ -112,7 +112,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div id="wheader">
         <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Select item to watch, click watched item to remove">
           <div class="header">
             Want:
@@ -121,7 +121,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div id="hitems">
         <div id="items"></div>
       </div>
       <div id="wanted"></div>
@@ -131,7 +131,7 @@
       <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Green: buildable, yellow: one off, blue: wanted (doesn't display if buildable or oneoff)">
         <div class="header">Cheatsheet:</div>
       </div>
-      <br class="clear">
+      <div class="clear"></div>
       <div id="cheatsheet"></div>
     </div>
     <hr>
@@ -140,13 +140,13 @@
     </div>
     <div id="buildable"></div>
     <div id="oneoffsection">
-      <br class="clear">
+      <div class="clear"></div>
       <div class="headercontainer" data-balloon-blunt data-balloon-length="medium" data-balloon-pos="up-left" aria-label="Items you are one component off from building; Click item to filter by missing component, click filter to remove">
         <div class="header">One-off:</div>
         <div id="oneofffilter" onclick="ti.ti.clearoneofffilter()"></div>
       </div>
       <div id="oneoff"></div>
-      <br class="clear">
+      <div class="clear"></div>
     </div>
     <div id="combinationsection">
       <hr>
@@ -155,7 +155,7 @@
         <div id="combinationsfilter" onclick="ti.ti.clearcombfilter()"></div>
       </div>
       <div id="combinations"></div>
-      <br class="clear">
+      <div class="clear"></div>
     </div>
     <hr>
     <div id="menu">
