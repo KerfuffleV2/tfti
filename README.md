@@ -10,9 +10,11 @@ Tool for the game Team Fight Tactics to aid with calculating what items are buil
 
 3. Shows all items you are one component off from building.
 
-4. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
+4. Dynamic cheatsheet which shows the items you can build and that you're one component off from building.
 
-5. You can filter Combinations to show only groups with Sword of Shojin, for example.
+5. You can put items in your wanted list and it will show you whether they are buildable and what you need if not.
+
+6. You can filter Combinations to show only groups with Sword of Shojin, for example.
 
 This tool is primarily useful displayed on a tab or device while playing. If you don't play in fullscreen mode, you should be able to hit F9 to unlock the mouse cursor.
 
@@ -23,6 +25,8 @@ Click a component in **Shop** to add it. You can click it in **Have** to remove 
 You can add watched item by selecting the name from the dropdown under **Want**. Click the item icon in the same area to remove it. You may also use separate want list profiles for different builds using an anchor link. For example: https://kerfufflev2.github.io/tfti/#yordles
 
 You can click an item in **Buildable** to remove both components for that item.
+
+The **One-off** section shows all items you are one component away from building. You can click an item in this section to filter by the missing component. Click again (or click the filter) to clear it.
 
 The **Combinations** section shows all combinations of buildable items with the components you have. Each part is sorted by a tier list and lower quality items (Ruunan's Hurricane for example) are shown slightly faded out. You can click an item in this section to filter out any groups that don't have the item. Click the filter to clear it.
 
