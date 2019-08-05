@@ -4,7 +4,7 @@ var ITEMS =
     "comp": "00",
     "desc": "Critical Strike damage is increased by 150%.",
     "name": "Infinity Edge",
-    "score": 2.5
+    "score": 3.5
   },
   {
     "comp": "01",
@@ -16,19 +16,19 @@ var ITEMS =
     "comp": "02",
     "desc": "Heals 25% of damage dealt.",
     "name": "Hextech Gunblade",
-    "score": 2
+    "score": 3
   },
   {
     "comp": "03",
     "desc": "After casting an ability, recover 15% of remaining maximum Mana per attack.",
     "name": "Spear of Shojin",
-    "score": 4
+    "score": 3
   },
   {
     "comp": "04",
     "desc": "Revive with 1000HP after 2 seconds.",
     "name": "Guardian Angel",
-    "score": 3
+    "score": 4.5
   },
   {
     "comp": "05",
@@ -40,7 +40,7 @@ var ITEMS =
     "comp": "06",
     "desc": "On combat start, wearer and allies 2 spaces to left and right gain 15% attack speed.",
     "name": "Zeke's Herald",
-    "score": 3.5
+    "score": 2.5
   },
   {
     "comp": "07",
@@ -64,37 +64,37 @@ var ITEMS =
     "comp": "13",
     "desc": "Every 3rd attack deals 90 splash magic damage to up to 3 targets.",
     "name": "Statikk Shiv",
-    "score": 3
+    "score": 5
   },
   {
     "comp": "14",
     "desc": "Dodge all crits.",
     "name": "Phantom Dancer",
-    "score": 5
+    "score": 4
   },
   {
     "comp": "15",
     "desc": "20% chance to demote enemy unit by one star on hit.",
     "name": "Cursed Blade",
-    "score": 4
+    "score": 3
   },
   {
     "comp": "16",
     "desc": "Attacks deal 10% of the wearer's maximum HP as bonus splash damage.",
     "name": "Titanic Hydra",
-    "score": 3.5
+    "score": 2
   },
   {
     "comp": "17",
     "desc": "You are a Blademaster. +20% AS",
     "name": "Blade of the Ruined King",
-    "score": 3
+    "score": 3.5
   },
   {
     "comp": "22",
     "desc": "Gain 50% Ability Damage.",
     "name": "Rabadon's Deathcap",
-    "score": 2
+    "score": 3
   },
   {
     "comp": "23",
@@ -106,7 +106,7 @@ var ITEMS =
     "comp": "24",
     "desc": "On combat start, wearer and allies 2 spaces to left and right gain a 4sec shield of 200.",
     "name": "Locket of the Iron Solari",
-    "score": 3.5
+    "score": 0.5
   },
   {
     "comp": "25",
@@ -124,19 +124,19 @@ var ITEMS =
     "comp": "27",
     "desc": "You are a Sorcerer. +20AP",
     "name": "Yuumi",
-    "score": 3
+    "score": 3.5
   },
   {
     "comp": "33",
     "desc": "Regain 20 Mana with each spell cast.",
     "name": "Seraph's Embrace",
-    "score": 4
+    "score": 5
   },
   {
     "comp": "34",
     "desc": "Adjacent enemies lose 20% Attack Speed.",
     "name": "Frozen Heart",
-    "score": 3
+    "score": 2
   },
   {
     "comp": "35",
@@ -148,7 +148,7 @@ var ITEMS =
     "comp": "36",
     "desc": "When reaching 25% health, heal all nearby allies for 1000 HP.",
     "name": "Redemption",
-    "score": 2.5
+    "score": 3.5
   },
   {
     "comp": "37",
@@ -166,7 +166,7 @@ var ITEMS =
     "comp": "45",
     "desc": "Attacks have a 25% chance to disarm the enemy.",
     "name": "Sword Breaker",
-    "score": 2.5
+    "score": 3
   },
   {
     "comp": "46",
@@ -178,37 +178,37 @@ var ITEMS =
     "comp": "47",
     "desc": "You are a Knight. +20 armor",
     "name": "Knight's Vow",
-    "score": 1
+    "score": 3
   },
   {
     "comp": "55",
     "desc": "83% resistance to magic damage.",
     "name": "Dragon's Claw",
-    "score": 5
+    "score": 4.5
   },
   {
     "comp": "56",
     "desc": "Banish an enemy for five seconds on combat start.",
     "name": "Zephyr",
-    "score": 3.5
+    "score": 2
   },
   {
     "comp": "57",
     "desc": "Attacks hit an additional nearby enemy for 25% damage. Applies on-hits.",
     "name": "Runaan's Hurricane",
-    "score": 2.5
+    "score": 2
   },
   {
     "comp": "66",
     "desc": "Regenerate 6% of missing health per second.",
     "name": "Warmog's Armor",
-    "score": 4
+    "score": 3.5
   },
   {
     "comp": "67",
     "desc": "You are a Glacial. +200HP",
     "name": "Frozen Mallet",
-    "score": 3
+    "score": 3.5
   },
   {
     "comp": "77",
