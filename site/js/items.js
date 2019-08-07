@@ -8,7 +8,7 @@ var ITEMS =
   },
   {
     "comp": "01",
-    "desc": "5 percent chance each second to gain 100 percent crit.",
+    "desc": "7% chance each second to gain 100 percent crit.",
     "name": "Sword of the Divine",
     "score": 2
   },
@@ -26,7 +26,7 @@ var ITEMS =
   },
   {
     "comp": "04",
-    "desc": "Revive with 1000HP after 2 seconds.",
+    "desc": "Revive with 800HP after 2 seconds.",
     "name": "Guardian Angel",
     "score": 4.5
   },
@@ -56,7 +56,7 @@ var ITEMS =
   },
   {
     "comp": "12",
-    "desc": "Gain 4% stacking Attack Speed on hit. Stacks indefinitely.",
+    "desc": "Gain 5% stacking Attack Speed on hit. Stacks indefinitely.",
     "name": "Guinsoo's Rageblade",
     "score": 3
   },
@@ -68,7 +68,7 @@ var ITEMS =
   },
   {
     "comp": "14",
-    "desc": "Dodge all crits.",
+    "desc": "Dodge all crits from autoattacks and abilities.",
     "name": "Phantom Dancer",
     "score": 4
   },
@@ -116,7 +116,7 @@ var ITEMS =
   },
   {
     "comp": "26",
-    "desc": "Spells burn 5% of the enemy's max HP per second for 5 seconds.",
+    "desc": "Spells burn 4% of the enemy's max HP per second for 5 seconds (20% total).",
     "name": "Morellonomicon",
     "score": 4
   },
@@ -194,7 +194,7 @@ var ITEMS =
   },
   {
     "comp": "57",
-    "desc": "Attacks hit an additional nearby enemy for 25% damage. Applies on-hits.",
+    "desc": "Attacks hit an additional nearby enemy for 75% damage. Applies on-hits.",
     "name": "Runaan's Hurricane",
     "score": 2
   },
