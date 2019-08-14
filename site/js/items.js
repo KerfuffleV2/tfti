@@ -2,7 +2,7 @@ var ITEMS =
 [
   {
     "comp": "00",
-    "desc": "Critical Strike damage is increased by 150%.",
+    "desc": "Critical Strike damage is increased by 200%.",
     "name": "Infinity Edge",
     "score": 3.5
   },
@@ -26,7 +26,7 @@ var ITEMS =
   },
   {
     "comp": "04",
-    "desc": "Revive with 800HP after 2 seconds.",
+    "desc": "Revive with 500HP after 2 seconds.",
     "name": "Guardian Angel",
     "score": 4.5
   },
@@ -62,7 +62,7 @@ var ITEMS =
   },
   {
     "comp": "13",
-    "desc": "Every 3rd attack deals 90 splash magic damage to up to 3 targets.",
+    "desc": "Every 3rd attack deals 100 splash magic damage to up to 3 targets.",
     "name": "Statikk Shiv",
     "score": 5
   },
@@ -104,19 +104,19 @@ var ITEMS =
   },
   {
     "comp": "24",
-    "desc": "On combat start, wearer and allies 2 spaces to left and right gain a 4sec shield of 200.",
+    "desc": "On combat start, wearer and allies 2 spaces to left and right gain a 6sec shield of 200.",
     "name": "Locket of the Iron Solari",
     "score": 0.5
   },
   {
     "comp": "25",
-    "desc": "Whenever an enemy casts a spell they take 150 true damage.",
+    "desc": "Whenever an enemy casts a spell they take 125 true damage. Effect stacks.",
     "name": "Ionic Spark",
     "score": 3
   },
   {
     "comp": "26",
-    "desc": "Spells burn 4% of the enemy's max HP per second for 5 seconds (20% total).",
+    "desc": "Spells burn 2% of the enemy's max HP per second for 10 seconds (20% total).",
     "name": "Morellonomicon",
     "score": 4
   },
@@ -140,13 +140,13 @@ var ITEMS =
   },
   {
     "comp": "35",
-    "desc": "Attacks have a 50% chance to Silence for 3 seconds.",
+    "desc": "Attacks have a 33% chance prevent mana generation for 4 seconds.",
     "name": "Hush",
     "score": 3
   },
   {
     "comp": "36",
-    "desc": "When reaching 25% health, heal all nearby allies for 1000 HP.",
+    "desc": "When reaching 25% health, heal all nearby allies for 1500 HP.",
     "name": "Redemption",
     "score": 3.5
   },
@@ -170,7 +170,7 @@ var ITEMS =
   },
   {
     "comp": "46",
-    "desc": "Attacks burn for 2.5% of max HP and disable healing.",
+    "desc": "Attacks burn 2% of the enemy's max HP per second for 10 seconds (20% total).",
     "name": "Red Buff",
     "score": 4.5
   },
@@ -200,7 +200,7 @@ var ITEMS =
   },
   {
     "comp": "66",
-    "desc": "Regenerate 6% of missing health per second.",
+    "desc": "Regenerate 6% of missing health per second (max 400/tick).",
     "name": "Warmog's Armor",
     "score": 3.5
   },
