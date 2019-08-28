@@ -32,7 +32,7 @@ var ITEMS =
   },
   {
     "comp": "05",
-    "desc": "35 percent Lifesteal.",
+    "desc": "Heal for 40% of auto attack damage.",
     "name": "The Bloodthirster",
     "score": 3
   },
@@ -98,7 +98,7 @@ var ITEMS =
   },
   {
     "comp": "23",
-    "desc": "Deal 200 true splash damage on ability hit.",
+    "desc": "Deal 180 true splash damage on ability hit.",
     "name": "Luden's Echo",
     "score": 2
   },
@@ -146,7 +146,7 @@ var ITEMS =
   },
   {
     "comp": "36",
-    "desc": "When reaching 25% health, heal all nearby allies for 1500 HP.",
+    "desc": "When reaching 25% health, heal all nearby allies for 1200 HP.",
     "name": "Redemption",
     "score": 3.5
   },
